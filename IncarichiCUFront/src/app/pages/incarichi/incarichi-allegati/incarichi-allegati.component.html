@@ -1,0 +1,49 @@
+<div class="example-element-detail" [@detailExpand]="expandedElement ? 'expanded' : 'collapsed'">
+    <ng-container *ngIf="allegati && allegati.length; else noData">
+      <table mat-table [dataSource]="allegati" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="contatore">
+          <th mat-header-cell *matHeaderCellDef> Contatore </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.contatore}}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="desc">
+          <th mat-header-cell *matHeaderCellDef> Descrizione </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.desc}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="dataAllegato">
+            <th mat-header-cell *matHeaderCellDef> Data Allegato </th>
+            <td mat-cell *matCellDef="let allegato">
+              <div class="flex-container">
+                {{allegato.dataAllegato | date: 'dd/MM/yyyy'}}
+                <mat-icon *ngIf="!isDownloading" (click)="eseguiAzione(0, allegato)" class="icon-right">attach_file</mat-icon>
+                <mat-icon *ngIf="isDownloading" class="icon-right spinner">hourglass_empty</mat-icon>
+              </div>
+            </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dataRientro">
+            <th mat-header-cell *matHeaderCellDef> Data Rientro </th>
+            <td mat-cell *matCellDef="let allegato">
+              <div class="flex-container">
+                <ng-container *ngIf="allegato.data_Rientro; else noDataRientro">
+                  {{allegato.data_Rientro | date: 'dd/MM/yyyy'}}
+   <!-- Per ora disabilitato <mat-icon (click)="eseguiAzione(1, allegato.contatore)" class="icon-right">image</mat-icon> -->
+                </ng-container>
+                <ng-template #noDataRientro>
+                  <div>DATO NON PRESENTE</div>
+                </ng-template>
+              </div>
+            </td>
+          </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['contatore', 'desc', 'dataAllegato', 'dataRientro']" class="my-header"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['contatore', 'desc', 'dataAllegato', 'dataRientro'];"></tr>
+      </table>
+    </ng-container>
+
+    <ng-template #noData>
+      <div>NESSUN DATO PRESENTE</div>
+    </ng-template>
+  </div>

@@ -1,0 +1,75 @@
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    flex-grow: 1;
+  }
+
+  .box {
+    flex-basis: 15rem;
+    flex-grow: 1;
+    margin: 10px;
+    width: 100%;
+  }
+
+  mat-form-field {
+    width: 100%;
+  }
+
+  .buttonClass {
+    margin-right: 0px;
+  }
+
+  .buttonContainer {
+    width: 100%;
+    text-align: right;
+  }
+
+  .hidden-row {
+    height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table th,
+  .table td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .element-row {
+    cursor: pointer;
+  }
+
+  .expanded-row {
+    background-color: #f5f5f5;
+  }
+
+  .detail-row {
+    background-color: #f9f9f9;
+  }
+
+  .hidden-row {
+    display: none;
+  }
+  .table th {
+    background-color: #f5f5f5;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+
+  .table th:hover {
+    background-color: #e0e0e0;
+  }
+
+  .table tr:hover {
+    background-color: #f5f5f5;
+  }
+
+  .space{
+    margin-bottom: 20px;
+  }
