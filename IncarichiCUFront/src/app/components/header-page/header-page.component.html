@@ -1,27 +1,18 @@
 <mat-toolbar class="menuGradient menuShadow">
-    <button mat-icon-button (click)="sidenav.toggle()">
-      <mat-icon>menu</mat-icon>
-    </button>
+  <button mat-icon-button (click)="sidenav.toggle()">
+    <mat-icon>menu</mat-icon>
+  </button>
 
-    <span style="margin-left: 40px;">
-      <!-- Inserisci titolo per navbar qui -->
+  <span style="margin-left: 40px;">
+    <!-- Inserisci titolo per navbar qui -->
   </span>
   <span></span>
 
   <img src="../../../assets/images/sopraninoLogo.png" class="logo" alt="Logo">
-  </mat-toolbar>
+</mat-toolbar>
 
-<mat-sidenav-container class="sidenav-container">
-    <mat-sidenav #sidenav="matSidenav">
-
-      <div class="links">
-        <a (click)="goToIncarichi(); sidenav.close()" mat-button class="custom-color"><mat-icon>assignment</mat-icon>Incarichi</a>
-        <a (click)="test(); sidenav.close()" mat-button class="custom-color"><mat-icon>exit_to_app</mat-icon>Logout</a>
-      </div>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <router-outlet></router-outlet>
-    </mat-sidenav-content>
-
-  </mat-sidenav-container>
+<mat-sidenav #sidenav mode="over" class="mat-elevation-z8">
+  <div class="links">
+    <a (click)="goToIncarichi(); sidenav.close()" mat-button class="custom-color"><mat-icon>assignment</mat-icon>Incarichi</a>
+  </div>
+</mat-sidenav>

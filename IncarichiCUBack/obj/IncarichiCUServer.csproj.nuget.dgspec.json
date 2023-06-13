@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj": {}
+    "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\IncarichiCUServer.csproj": {}
   },
   "projects": {
-    "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj": {
+    "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\IncarichiCUServer.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj",
+        "projectUniqueName": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\IncarichiCUServer.csproj",
         "projectName": "IncarichiCUServer",
-        "projectPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj",
+        "projectPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\IncarichiCUServer.csproj",
         "packagesPath": "C:\\Users\\kevin.rossi\\.nuget\\packages\\",
-        "outputPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\obj\\",
+        "outputPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\kevin.rossi\\AppData\\Roaming\\NuGet\\NuGet.Config",

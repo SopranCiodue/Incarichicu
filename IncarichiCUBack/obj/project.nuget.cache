@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "9P249lk30vOgw0nbsS1ks1mR04TuA63t8SY1cIhu6haOMbe4tW8hjcZ/yYjMVQwUaX5+PMD0AfXR9TA1L+WXlw==",
+  "dgSpecHash": "BaS2HXSspCRnq27XIRzeRXmhW2Yf60jm++2gIIT+JWTzsJO0qVFCA3bVY9y0rln5KEXtY9S1On8Nnhn7sDFbXQ==",
   "success": true,
-  "projectFilePath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj",
+  "projectFilePath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUBack\\IncarichiCUServer.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kevin.rossi\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\kevin.rossi\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",

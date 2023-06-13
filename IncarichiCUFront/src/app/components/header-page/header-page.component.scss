@@ -1,6 +1,12 @@
 mat-toolbar{
     background:#1c1938;
     color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+
   }
 
 .menuGradient{
@@ -15,8 +21,11 @@ mat-toolbar{
 }
 
   mat-sidenav{
-    margin: 16px;
+    position: fixed;
+    margin: 2px;
+    margin-top: 70px;
     width: 200px;
+    height: 500px;
     border-right: none;
     background:rgb(2,0,36);
     color: white;
@@ -39,9 +48,6 @@ mat-toolbar{
     border-radius: 10px;
   }
 
-  mat-sidenav-container{
-    height: calc(100vh - 65px);
-  }
 
   .menu-button{
     width: 100%;

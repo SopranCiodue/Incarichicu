@@ -3,22 +3,23 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IIncarichi } from '../models/IIncarichi';
 import { IAllegatiList } from '../models/IAllegatiList';
+import { environment } from '../environment/environment';
 
+const baseUrl: string = environment.urlService;
 @Injectable({
   providedIn: 'root',
 })
 export class IncarichiService {
-  private baseUrl = 'http://localhost:5000/';
   private searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
   private selectedIncarichiData = { key_ord: '', haccp: 0 };
   constructor(private http: HttpClient) {}
 
   getIncarichi(): Observable<any> {
-    return this.http.get(this.baseUrl + 'GetIncarichi');
+    return this.http.get(baseUrl + 'GetIncarichi');
   }
 
   getAllegatiList(): Observable<any> {
-    return this.http.get(this.baseUrl + 'GetAllegatiList');
+    return this.http.get(baseUrl + 'GetAllegatiList');
   }
 
   getAllegatiData(
@@ -28,7 +29,7 @@ export class IncarichiService {
     contatore: number
   ): Observable<any> {
     return this.http.get(
-      this.baseUrl +
+      baseUrl +
         'GetAllegatiData?rientro=' +
         rientro +
         '&keyord=' +
@@ -50,7 +51,7 @@ export class IncarichiService {
   }
   getAllegati(keyord: string, haccp: number): Observable<IAllegatiList[]> {
     return this.http.get<IAllegatiList[]>(
-      this.baseUrl + 'GetAllegatiList?keyord=' + keyord + '&haccp=' + haccp
+      baseUrl + 'GetAllegatiList?keyord=' + keyord + '&haccp=' + haccp
     );
   }
   setSelectedIncarichiData(key_ord: string, haccp: number) {

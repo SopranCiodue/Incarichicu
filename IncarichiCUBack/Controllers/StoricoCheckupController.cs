@@ -35,7 +35,7 @@ namespace IncarichiCUServer.Controllers
             string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '{keyord}', @haccp = {haccp}, @contatore = " + contatore + ", @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
-            string fileName = "FileTest.rar";
+            string fileName = "FileTest.rar";   
             return new FileContentResult(result.Doc, "application/octet-stream")
             {
                 FileDownloadName = fileName
