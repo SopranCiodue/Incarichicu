@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { IIncarichi } from '../models/IIncarichi';
 import { IAllegatiList } from '../models/IAllegatiList';
 import { environment } from '../environment/environment';
+import { Router } from '@angular/router';
 
 const baseUrl: string = environment.urlService;
 @Injectable({
@@ -12,14 +13,26 @@ const baseUrl: string = environment.urlService;
 export class IncarichiService {
   private searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
   private selectedIncarichiData = { key_ord: '', haccp: 0 };
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private router: Router) {}
 
-  getIncarichi(): Observable<any> {
-    return this.http.get(baseUrl + 'GetIncarichi');
+  getIncarichi(idsam: number): Observable<any> {
+    return this.http.get(baseUrl +'GetIncarichi?idsam=' + idsam);
   }
 
   getAllegatiList(): Observable<any> {
     return this.http.get(baseUrl + 'GetAllegatiList');
+  }
+  getIdsam(): number {
+    const url = this.router.url;
+    const urlSegments = url.split('/');
+    const idsamSegment = urlSegments.find(segment => segment.includes('idsam'));
+
+    if (idsamSegment) {
+      const idsam = idsamSegment.split('=')[1];
+      return Number(idsam);
+    }
+
+    return null!;
   }
 
   getAllegatiData(

@@ -89,9 +89,15 @@ export class IncarichiListComponent implements OnInit {
     this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
   }
   getAllList() {
+    const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
+    if (!idsam) {
+      // Gestisci il caso in cui idsam non sia disponibile
+      console.error('idsam non disponibile');
+      return;
+    }
     this.isLoading = true;
     this.incarichiService
-      .getIncarichi()
+      .getIncarichi(idsam)
       .subscribe((incarichi: IIncarichi[]) => {
         this.list = [];
         incarichi.forEach((incarico) => {
