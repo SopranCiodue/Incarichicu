@@ -29,9 +29,6 @@ import { IncarichiAllegatiModule } from '../incarichi-allegati/incarichi-allegat
   imports: [
     CommonModule,
     IncarichiListRoutingModule,
-    MatFormFieldModule,
-    MatPaginatorModule,
-    MatTableModule,
     FormsModule,
     RouterModule,
     MatFormFieldModule,

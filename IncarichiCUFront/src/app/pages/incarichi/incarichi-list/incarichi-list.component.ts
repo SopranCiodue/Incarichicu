@@ -60,6 +60,7 @@ export class IncarichiListComponent implements OnInit {
     row.hasOwnProperty('detailRow');
   public incarichiSubcription: Subscription = new Subscription(); // Inizializza la Subscription
   public isLoading: Boolean = true;
+  public showIdSamError: boolean = false;
 
   @ViewChild(MatSort, { static: true }) sort: any;
   @ViewChild(MatPaginator, { static: true }) paginator: any;
@@ -73,17 +74,18 @@ export class IncarichiListComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllList();
-    this.dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
+    this.incarichiSubcription.add(
+      this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+    );
+  }
+  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
+    dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
       return dataStr.indexOf(filter) != -1;
     };
-
-    this.incarichiSubcription.add(
-      // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
-      this.incarichiService.getSearchObservable().subscribe((searchText) => {
-        this.dataSource.filter = searchText.trim().toLowerCase();
-      })
-    );
+    return incarichiService.getSearchObservable().subscribe((searchText: string) => {
+      dataSource.filter = searchText.trim().toLowerCase();
+    });
   }
   ngOnDestroy(): void {
     this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
@@ -92,6 +94,7 @@ export class IncarichiListComponent implements OnInit {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
       // Gestisci il caso in cui idsam non sia disponibile
+      this.showIdSamError = true;
       console.error('idsam non disponibile');
       return;
     }

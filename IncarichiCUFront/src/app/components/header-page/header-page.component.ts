@@ -13,13 +13,8 @@ export class HeaderPageComponent {
   {
 
   }
-
-  toggleSidenav() {
-    this.sidenav.toggle();
-  }
-
-goToIncarichi()
+ goToIncarichi()
 {
-  this.router.navigateByUrl("template/incarichi");
+  this.router.navigateByUrl("");
 }
 }
