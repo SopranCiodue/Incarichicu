@@ -127,7 +127,7 @@ export class IncarichiListComponent implements OnInit {
       .getIncarichi(idsam)
       .subscribe((incarichi: IIncarichi[]) => {
         this.list = [];
-        console.log("totalelista",incarichi.length);
+        // console.log("totalelista",incarichi.length);
         this.totaleIncarichi = incarichi.length;
         this.gestioneViewIncarichi();
         incarichi.forEach((incarico) => {

@@ -42,11 +42,11 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
       if (idsam === null) {
         this.showIdSamError = true;
         this.showSearchBar = false;  // nasconde la barra di ricerca
-        console.log('showSearchBar:', this.showSearchBar);
+        // console.log('showSearchBar:', this.showSearchBar);
       } else {
         this.showIdSamError = false;
         this.showSearchBar = true;  // mostra la barra di ricerca
-        console.log('showSearchBar:', this.showSearchBar);
+        // console.log('showSearchBar:', this.showSearchBar);
         // Usare idsam per richiedere gli incarichi
         this.incarichiService.getIncarichi(idsam).subscribe(incarichi => {
           this.incarichi = incarichi;

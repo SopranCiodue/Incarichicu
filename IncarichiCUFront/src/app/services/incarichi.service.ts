@@ -61,18 +61,18 @@ export class IncarichiService {
   
     if (idsamSegment) {
       const idsam = idsamSegment.split('=')[1];
-      console.log('idsam ottenuto: ', idsam); // stampa il valore di idsam
+      // console.log('idsam ottenuto: ', idsam); // stampa il valore di idsam
   
       if (!isNaN(Number(idsam)) && Number(idsam) > 0)  {
-        console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+        // console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
         return Number(idsam);
       }else {
     // idsam non è presente nell'URL
-    console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+    // console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
     throw new Error('ID SAM non presente');
   }
     }
-    console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+    // console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
     throw new Error('ID SAM non valido');
     return null;
   }
