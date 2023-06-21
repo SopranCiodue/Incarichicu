@@ -61,7 +61,6 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
     });
   }
   onSearchTextChanged(searchText: string) {
-    console.log('Search text changed:',searchText );
     this.incarichiService.updateSearch(searchText);
   }
 

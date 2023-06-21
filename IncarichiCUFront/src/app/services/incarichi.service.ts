@@ -106,7 +106,6 @@ export class IncarichiService {
   }
 
   updateSearch(searchText: string) {
-    console.log(`Updating search text: ${searchText}`);
     this.searchSubject.next(searchText);
   }
 
