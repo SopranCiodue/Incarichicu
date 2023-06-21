@@ -106,10 +106,12 @@ export class IncarichiService {
   }
 
   updateSearch(searchText: string) {
+    console.log(`Updating search text: ${searchText}`);
     this.searchSubject.next(searchText);
   }
 
   getSearchObservable(): Observable<string> {
+    
     return this.searchSubject.asObservable();
   }
   getAllegati(keyord: string, haccp: number): Observable<IAllegatiList[]> {

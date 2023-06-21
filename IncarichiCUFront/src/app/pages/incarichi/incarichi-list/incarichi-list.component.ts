@@ -77,43 +77,23 @@ export class IncarichiListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    let idsam: number | null;
-    try {
-      idsam = this.incarichiService.getIdsam();
-    } catch (error) {
-      this.showIdSamError = true;
-      this.isLoading = false; 
-      return;
-    }
-  
-    if (!idsam) {
-      this.showIdSamError = true;
-      this.isLoading = false; 
-      return;
-    }
-    if (idsam && idsam < 0) {
-      this.showIdSamError = true;
-      this.isLoading = false; 
-    } else {
-      this.getAllList();
-      this.incarichiSubcription.add(
-        this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
-      );
-      this.isLoading = false; 
-    }
+    this.gestioneExistsIdSam();
+    this.getAllList();
+    this.aggiornamentoFiltro();
+    this.isLoading = false; 
   }
+  
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
       return dataStr.indexOf(filter) != -1;
     };
     return incarichiService.getSearchObservable().subscribe((searchText: string) => {
-      dataSource.filter = searchText.trim().toLowerCase();
+      searchText = searchText.trim().toLowerCase();
+      dataSource.filter = searchText;
     });
   }
-  ngOnDestroy(): void {
-    this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
-  }
+  
   getAllList() {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
@@ -150,16 +130,15 @@ export class IncarichiListComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.paginator?.firstPage();
                 this.isLoading = false;
+                this.incarichiSubcription.add(
+                  this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+                );
               }
             });
         });
       });
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
+  
   onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
     this.listAllegati = [];
@@ -188,5 +167,29 @@ gestioneViewIncarichi(){
       this.showIdSamError = false;
     } 
   }
+}
+ngOnDestroy(): void {
+  this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
+}
+gestioneExistsIdSam(){
+  let idsam: number | null;
+  try {
+    idsam = this.incarichiService.getIdsam();
+  } catch (error) {
+    this.showIdSamError = true;
+    this.isLoading = false; 
+    return;
+  }
+
+  if (!idsam || idsam < 0) {
+    this.showIdSamError = true;
+    this.isLoading = false; 
+    return;
+  }
+}
+aggiornamentoFiltro(){
+    this.incarichiSubcription.add(
+    this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+    );
 }
 }

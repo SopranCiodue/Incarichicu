@@ -1,86 +1,86 @@
-<div *ngIf="showIdSamError" class="error">
-  IDsam non presente, impossibile caricare la tabella
-</div>
-<div class="container" *ngIf="!showIdSamError">
-  <div class="box">
-    <section style="width: 100%;">
-      <button (click)="getAllList()" mat-raised-button color="primary" class="backgroundButton space">Aggiorna</button>
-    </section>
-    <mat-progress-bar *ngIf="isLoading" mode="indeterminate" style="height: 5px;"></mat-progress-bar>
-    <div class="mat-elevation-z8">
+  <div *ngIf="showIdSamError" class="error">
+    IDsam non presente, impossibile caricare la tabella
+  </div>
+  <div class="container" *ngIf="!showIdSamError">
+    <div class="box">
+      <section style="width: 100%;">
+        <button (click)="getAllList()" mat-raised-button color="primary" class="backgroundButton space">Aggiorna</button>
+      </section>
+      <mat-progress-bar *ngIf="isLoading" mode="indeterminate" style="height: 5px;"></mat-progress-bar>
+      <div class="mat-elevation-z8">
 
-      <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="table">
+        <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="table">
 
-        <!-- Colonne per ogni campo di IIncarichi -->
-        <ng-container matColumnDef="codiceMago">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Mago </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.codiceMago }} </td>
-        </ng-container>
-        <ng-container matColumnDef="ragSociale">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Ragione Sociale </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.ragSociale }} </td>
-        </ng-container>
-        <ng-container matColumnDef="prov">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.prov }} </td>
-        </ng-container>
-        <ng-container matColumnDef="cap">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> CAP </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.cap }} </td>
-        </ng-container>
-        <ng-container matColumnDef="comune">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.comune }} </td>
-        </ng-container>
-        <ng-container matColumnDef="indirizzo">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Indirizzo </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.indirizzo }} </td>
-        </ng-container>
-        <ng-container matColumnDef="key_ord">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Key Ord </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.key_ord }} </td>
-        </ng-container>
-        <ng-container matColumnDef="servizio">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Servizio </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.servizio }} </td>
-        </ng-container>
-        <ng-container matColumnDef="eseguito">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Eseguito </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.eseguito }} </td>
-        </ng-container>
-        <ng-container matColumnDef="annullato">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Annullato </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.annullato }} </td>
-        </ng-container>
-        <ng-container matColumnDef="dataFattTecnico">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Fatturazione Tecnico </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.dataFattTecnicoFormatted }} </td>
-        </ng-container>
-        <ng-container matColumnDef="haccp">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> HACCP </th>
-          <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.haccp }} </td>
-        </ng-container>
-        <ng-container matColumnDef="allegato">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header> Allegato </th>
-          <td mat-cell *matCellDef="let row">
-            <mat-icon *ngIf="hasAttachments(row)">attach_file</mat-icon>
-          </td>
-        </ng-container>
-        <!-- Righe della tabella principale -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"
-          (click)="toggleExpandedElement(row)" [class.expanded-row]="expandedElement === row"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"
-          [class.hidden-row]="expandedElement != row"></tr>
-        <ng-container matColumnDef="expandedDetail">
-          <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
-            <app-incarichi-allegati [allegati]="listAllegati" [expandedElement]="expandedElement == element">
-            </app-incarichi-allegati>
-          </td>
-        </ng-container>
-      </table>
+          <!-- Colonne per ogni campo di IIncarichi -->
+          <ng-container matColumnDef="codiceMago">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Codice Mago </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.codiceMago }} </td>
+          </ng-container>
+          <ng-container matColumnDef="ragSociale">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Ragione Sociale </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.ragSociale }} </td>
+          </ng-container>
+          <ng-container matColumnDef="prov">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Provincia </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.prov }} </td>
+          </ng-container>
+          <ng-container matColumnDef="cap">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> CAP </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.cap }} </td>
+          </ng-container>
+          <ng-container matColumnDef="comune">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Comune </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.comune }} </td>
+          </ng-container>
+          <ng-container matColumnDef="indirizzo">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Indirizzo </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.indirizzo }} </td>
+          </ng-container>
+          <ng-container matColumnDef="key_ord">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Key Ord </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.key_ord }} </td>
+          </ng-container>
+          <ng-container matColumnDef="servizio">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Servizio </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.servizio }} </td>
+          </ng-container>
+          <ng-container matColumnDef="eseguito">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Eseguito </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.eseguito }} </td>
+          </ng-container>
+          <ng-container matColumnDef="annullato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Annullato </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.annullato }} </td>
+          </ng-container>
+          <ng-container matColumnDef="dataFattTecnico">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Data Fatturazione Tecnico </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.dataFattTecnicoFormatted }} </td>
+          </ng-container>
+          <ng-container matColumnDef="haccp">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> HACCP </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.haccp }} </td>
+          </ng-container>
+          <ng-container matColumnDef="allegato">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Allegato </th>
+            <td mat-cell *matCellDef="let row">
+              <mat-icon *ngIf="hasAttachments(row)">attach_file</mat-icon>
+            </td>
+          </ng-container>
+          <!-- Righe della tabella principale -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="element-row"
+            (click)="toggleExpandedElement(row)" [class.expanded-row]="expandedElement === row"></tr>
+          <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="detail-row"
+            [class.hidden-row]="expandedElement != row"></tr>
+          <ng-container matColumnDef="expandedDetail">
+            <td mat-cell *matCellDef="let element" [attr.colspan]="displayedColumns.length">
+              <app-incarichi-allegati [allegati]="listAllegati" [expandedElement]="expandedElement == element">
+              </app-incarichi-allegati>
+            </td>
+          </ng-container>
+        </table>
 
-      <mat-paginator [length]="list.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50]"></mat-paginator>
+        <mat-paginator [length]="list.length" [pageSize]="10" [pageSizeOptions]="[5, 10, 20, 50]"></mat-paginator>
+      </div>
     </div>
   </div>
-</div>
