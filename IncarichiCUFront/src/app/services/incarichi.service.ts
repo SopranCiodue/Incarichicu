@@ -13,7 +13,15 @@ const baseUrl: string = environment.urlService;
 export class IncarichiService {
   private searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
   private selectedIncarichiData = { key_ord: '', haccp: 0 };
-  constructor(private http: HttpClient, private router: Router) {}
+  private _idsamPresent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
+  idsamPresent$ = this._idsamPresent.asObservable();
+  private _showIdSamError = new BehaviorSubject<boolean>(false);
+ showIdSamError = this._showIdSamError.asObservable();
+ 
+
+  constructor(private http: HttpClient, private router: Router) {
+
+  }
 
   getIncarichi(idsam: number): Observable<any> {
     return this.http.get(baseUrl +'GetIncarichi?idsam=' + idsam);
@@ -22,19 +30,61 @@ export class IncarichiService {
   getAllegatiList(): Observable<any> {
     return this.http.get(baseUrl + 'GetAllegatiList');
   }
-  getIdsam(): number {
+  getIdsamObservable(): Observable<number | null> {
+    return new Observable(observer => {
+      let idsam = this.getIdsamFromUrl();
+      if(idsam === null) {
+        this._showIdSamError.next(true);
+      } else {
+        this._showIdSamError.next(false);
+      }
+      observer.next(idsam);
+      observer.complete();
+    });
+  }
+  getIdsam(): number | null {
+    let idsam = this.getIdsamFromUrl();
+    if(idsam === null) {
+      this._showIdSamError.next(true);
+      this.updateIdsamStatus(false);
+    } else {
+      this._showIdSamError.next(false);
+      this.updateIdsamStatus(true);
+    }
+    return idsam;
+  }
+
+  private getIdsamFromUrl(): number | null {
     const url = this.router.url;
     const urlSegments = url.split('/');
     const idsamSegment = urlSegments.find(segment => segment.includes('idsam'));
-
+  
     if (idsamSegment) {
       const idsam = idsamSegment.split('=')[1];
-      return Number(idsam);
+      console.log('idsam ottenuto: ', idsam); // stampa il valore di idsam
+  
+      if (!isNaN(Number(idsam)) && Number(idsam) > 0)  {
+        console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+        return Number(idsam);
+      }else {
+    // idsam non è presente nell'URL
+    console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+    throw new Error('ID SAM non presente');
+  }
     }
-
-    return null!;
+    console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
+    throw new Error('ID SAM non valido');
+    return null;
   }
 
+  public getIdsamStatus(): boolean {
+    return this._idsamPresent.getValue();
+  }
+
+  public updateIdsamStatus(status: boolean): void {
+    this._idsamPresent.next(status);
+  }
+  
   getAllegatiData(
     rientro: number,
     key_ord: string,

@@ -1,7 +1,7 @@
 <div *ngIf="showIdSamError" class="error">
   IDsam non presente, impossibile caricare la tabella
 </div>
-<div class="container">
+<div class="container" *ngIf="!showIdSamError">
   <div class="box">
     <section style="width: 100%;">
       <button (click)="getAllList()" mat-raised-button color="primary" class="backgroundButton space">Aggiorna</button>

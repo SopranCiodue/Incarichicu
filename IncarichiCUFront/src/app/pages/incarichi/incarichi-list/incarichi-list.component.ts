@@ -61,6 +61,10 @@ export class IncarichiListComponent implements OnInit {
   public incarichiSubcription: Subscription = new Subscription(); // Inizializza la Subscription
   public isLoading: Boolean = true;
   public showIdSamError: boolean = false;
+  public idsamPresent: boolean = true;
+  private totaleIncarichi: number = 0;
+  
+
 
   @ViewChild(MatSort, { static: true }) sort: any;
   @ViewChild(MatPaginator, { static: true }) paginator: any;
@@ -73,10 +77,30 @@ export class IncarichiListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllList();
-    this.incarichiSubcription.add(
-      this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
-    );
+    let idsam: number | null;
+    try {
+      idsam = this.incarichiService.getIdsam();
+    } catch (error) {
+      this.showIdSamError = true;
+      this.isLoading = false; 
+      return;
+    }
+  
+    if (!idsam) {
+      this.showIdSamError = true;
+      this.isLoading = false; 
+      return;
+    }
+    if (idsam && idsam < 0) {
+      this.showIdSamError = true;
+      this.isLoading = false; 
+    } else {
+      this.getAllList();
+      this.incarichiSubcription.add(
+        this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+      );
+      this.isLoading = false; 
+    }
   }
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
@@ -94,7 +118,7 @@ export class IncarichiListComponent implements OnInit {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
       // Gestisci il caso in cui idsam non sia disponibile
-      this.showIdSamError = true;
+      this.idsamPresent = false;
       console.error('idsam non disponibile');
       return;
     }
@@ -103,6 +127,9 @@ export class IncarichiListComponent implements OnInit {
       .getIncarichi(idsam)
       .subscribe((incarichi: IIncarichi[]) => {
         this.list = [];
+        console.log("totalelista",incarichi.length);
+        this.totaleIncarichi = incarichi.length;
+        this.gestioneViewIncarichi();
         incarichi.forEach((incarico) => {
           this.incarichiService
             .getAllegati(incarico.key_ord, incarico.haccp)
@@ -151,4 +178,15 @@ export class IncarichiListComponent implements OnInit {
     // Utilizzo la nuova proprietà 'hasAttachments' per capire se la riga ha allegati o meno
     return row.hasAttachments ?? false;
   }
+existsIncarichi(){
+  return this.totaleIncarichi>0;
+}
+gestioneViewIncarichi(){
+  this.showIdSamError = true;
+  if(this.idsamPresent){
+    if(this.existsIncarichi()){
+      this.showIdSamError = false;
+    } 
+  }
+}
 }

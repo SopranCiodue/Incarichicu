@@ -1,9 +1,14 @@
-<div class="container">
-    <div class="box">
-      <mat-form-field appearance="fill">
-        <mat-label>Cerca</mat-label>
-        <input matInput placeholder="Cerca" [(ngModel)]="searchText" (input)="onSearchTextChanged(searchText)">
-      </mat-form-field>
-    </div>
+
+<div class="container" *ngIf="showSearchBar">
+  <div class="box">
+    <mat-form-field appearance="fill">
+      <mat-label>Cerca</mat-label>
+      <input matInput [(ngModel)]="searchText" placeholder="Cerca" aria-label="Cerca">
+    </mat-form-field>
   </div>
+</div>
+
+
+
+
   
