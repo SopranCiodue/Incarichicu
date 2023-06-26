@@ -60,6 +60,11 @@ export class IncarichiListComponent implements OnInit {
     row.hasOwnProperty('detailRow');
   public incarichiSubcription: Subscription = new Subscription(); // Inizializza la Subscription
   public isLoading: Boolean = true;
+  public showIdSamError: boolean = false;
+  public idsamPresent: boolean = true;
+  private totaleIncarichi: number = 0;
+  
+
 
   @ViewChild(MatSort, { static: true }) sort: any;
   @ViewChild(MatPaginator, { static: true }) paginator: any;
@@ -72,28 +77,39 @@ export class IncarichiListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.gestioneExistsIdSam();
     this.getAllList();
-    this.dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
+    this.aggiornamentoFiltro();
+    this.isLoading = false; 
+  }
+  
+  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
+    dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
       return dataStr.indexOf(filter) != -1;
     };
-
-    this.incarichiSubcription.add(
-      // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
-      this.incarichiService.getSearchObservable().subscribe((searchText) => {
-        this.dataSource.filter = searchText.trim().toLowerCase();
-      })
-    );
+    return incarichiService.getSearchObservable().subscribe((searchText: string) => {
+      searchText = searchText.trim().toLowerCase();
+      dataSource.filter = searchText;
+    });
   }
-  ngOnDestroy(): void {
-    this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
-  }
+  
   getAllList() {
+    const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
+    if (!idsam) {
+      // Gestisci il caso in cui idsam non sia disponibile
+      this.idsamPresent = false;
+      console.error('idsam non disponibile');
+      return;
+    }
     this.isLoading = true;
     this.incarichiService
-      .getIncarichi()
+      .getIncarichi(idsam)
       .subscribe((incarichi: IIncarichi[]) => {
         this.list = [];
+        // console.log("totalelista",incarichi.length);
+        this.totaleIncarichi = incarichi.length;
+        this.gestioneViewIncarichi();
         incarichi.forEach((incarico) => {
           this.incarichiService
             .getAllegati(incarico.key_ord, incarico.haccp)
@@ -114,16 +130,15 @@ export class IncarichiListComponent implements OnInit {
                 this.dataSource.paginator = this.paginator;
                 this.dataSource.paginator?.firstPage();
                 this.isLoading = false;
+                this.incarichiSubcription.add(
+                  this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+                );
               }
             });
         });
       });
   }
-  applyFilter(event: Event) {
-    const filterValue = (event.target as HTMLInputElement).value;
-    this.dataSource.filter = filterValue.trim().toLowerCase();
-  }
-
+  
   onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
     this.listAllegati = [];
@@ -142,4 +157,39 @@ export class IncarichiListComponent implements OnInit {
     // Utilizzo la nuova proprietà 'hasAttachments' per capire se la riga ha allegati o meno
     return row.hasAttachments ?? false;
   }
+existsIncarichi(){
+  return this.totaleIncarichi>0;
+}
+gestioneViewIncarichi(){
+  this.showIdSamError = true;
+  if(this.idsamPresent){
+    if(this.existsIncarichi()){
+      this.showIdSamError = false;
+    } 
+  }
+}
+ngOnDestroy(): void {
+  this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
+}
+gestioneExistsIdSam(){
+  let idsam: number | null;
+  try {
+    idsam = this.incarichiService.getIdsam();
+  } catch (error) {
+    this.showIdSamError = true;
+    this.isLoading = false; 
+    return;
+  }
+
+  if (!idsam || idsam < 0) {
+    this.showIdSamError = true;
+    this.isLoading = false; 
+    return;
+  }
+}
+aggiornamentoFiltro(){
+    this.incarichiSubcription.add(
+    this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+    );
+}
 }

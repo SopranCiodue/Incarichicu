@@ -7,6 +7,8 @@ import { IncarichiListModule } from '../incarichi-list/incarichi-list.module';
 import { IncarichiFilterModule } from '../incarichi-filter/incarichi-filter.module';
 import { TitlePageComponent } from 'src/app/components/title-page/title-page.component';
 import { TitlePageModule } from 'src/app/components/title-page/title-page.module';
+import { HeaderPageModule } from 'src/app/components/header-page/header-page.module';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 
 @NgModule({
@@ -18,7 +20,9 @@ import { TitlePageModule } from 'src/app/components/title-page/title-page.module
     IncarichiViewRoutingModule,
     IncarichiListModule,
     IncarichiFilterModule,
-    TitlePageModule
+    TitlePageModule,
+    HeaderPageModule,
+    MatSidenavModule
   ]
 })
 export class IncarichiViewModule { }

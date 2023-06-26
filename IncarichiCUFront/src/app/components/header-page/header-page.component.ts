@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 
 @Component({
   selector: 'app-header-page',
@@ -7,17 +8,13 @@ import { Router } from '@angular/router';
   styleUrls: ['./header-page.component.scss']
 })
 export class HeaderPageComponent {
+  @ViewChild('sidenav') sidenav!: MatSidenav;
   constructor(private router: Router,)
-{
+  {
 
-}
-
-test()
+  }
+ goToIncarichi()
 {
-  this.router.navigateByUrl("template/paginaDesiderata");
-}
-goToIncarichi()
-{
-  this.router.navigateByUrl("template/incarichi");
+  this.router.navigateByUrl("");
 }
 }

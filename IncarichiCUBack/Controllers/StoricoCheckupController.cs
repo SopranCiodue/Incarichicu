@@ -18,7 +18,7 @@ namespace IncarichiCUServer.Controllers
         [HttpGet("GetIncarichi")]
         public async Task<IEnumerable<SP_StoricoCheckup_GetIncarichi>> GetListIncarichi(int idsam)
         {
-            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetIncarichi] @idsam = 69455";
+            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetIncarichi] @idsam =" + idsam;
             var result = await _context.SP_StoricoCheckup_GetIncarichi.FromSqlRaw(StoredProc).ToListAsync();
             return result;
         }
@@ -32,10 +32,10 @@ namespace IncarichiCUServer.Controllers
         [HttpGet("GetAllegatiData")]
         public async Task<IActionResult> GetListAllegatiData(int rientro, string keyord, int haccp, int contatore)
         {
-            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '{keyord}', @haccp = {haccp}, @contatore = " + contatore + ", @rientro = " + rientro;
+            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = " + keyord + ", @haccp = "+ haccp +", @contatore = " + contatore + ", @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
-            string fileName = "FileTest.rar";
+            string fileName = "FileTest.rar";   
             return new FileContentResult(result.Doc, "application/octet-stream")
             {
                 FileDownloadName = fileName

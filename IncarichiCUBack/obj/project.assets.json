@@ -3436,19 +3436,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\kevin.rossi\\.nuget\\packages\\": {}
+    "C:\\Users\\valentina.riad\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj",
+      "projectUniqueName": "C:\\VALENTINA\\PROGETTI\\Incarichicu-1\\IncarichiCUBack\\IncarichiCUServer.csproj",
       "projectName": "IncarichiCUServer",
-      "projectPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\IncarichiCUServer.csproj",
-      "packagesPath": "C:\\Users\\kevin.rossi\\.nuget\\packages\\",
-      "outputPath": "C:\\KEVIN\\PROGETTI\\IncarichiCU\\IncarichiCUServer\\obj\\",
+      "projectPath": "C:\\VALENTINA\\PROGETTI\\Incarichicu-1\\IncarichiCUBack\\IncarichiCUServer.csproj",
+      "packagesPath": "C:\\Users\\valentina.riad\\.nuget\\packages\\",
+      "outputPath": "C:\\VALENTINA\\PROGETTI\\Incarichicu-1\\IncarichiCUBack\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\kevin.rossi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\valentina.riad\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
