@@ -27,19 +27,18 @@ import { formatDate } from '@angular/common';
 })
 export class IncarichiListComponent implements OnInit {
   displayedColumns: string[] = [
+    'key_ord',
+    'servizio',
+    'eseguito',
+    'dataFattTecnico',
+    'annullato',
     'codiceMago',
     'ragSociale',
     'prov',
     'cap',
     'comune',
     'indirizzo',
-    'key_ord',
-    'servizio',
-    'eseguito',
-    'annullato',
-    'dataFattTecnico',
     'allegato',
-    // 'haccp',
   ];
   displayedColumnsAllegati: string[] = [
     'Keyord',
