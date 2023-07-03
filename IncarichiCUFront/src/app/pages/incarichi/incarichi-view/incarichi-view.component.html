@@ -3,10 +3,14 @@
 
   <mat-sidenav-content>
     <div class="distacco">
-    <app-title-page></app-title-page>
-    <app-incarichi-filter></app-incarichi-filter>
-    <app-incarichi-list></app-incarichi-list>
+      <app-title-page></app-title-page>
+      <mat-progress-spinner class="spinner" *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
+      <app-incarichi-filter *ngIf="!isLoading"></app-incarichi-filter>
+      <app-incarichi-list *ngIf="!isLoading"></app-incarichi-list>
     </div>
   </mat-sidenav-content>
 
 </mat-sidenav-container>
+
+
+

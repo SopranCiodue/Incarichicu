@@ -9,6 +9,7 @@ import { TitlePageComponent } from 'src/app/components/title-page/title-page.com
 import { TitlePageModule } from 'src/app/components/title-page/title-page.module';
 import { HeaderPageModule } from 'src/app/components/header-page/header-page.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -22,7 +23,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     IncarichiFilterModule,
     TitlePageModule,
     HeaderPageModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class IncarichiViewModule { }
