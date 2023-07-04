@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription, of } from 'rxjs';
@@ -25,7 +25,7 @@ import { formatDate } from '@angular/common';
   templateUrl: './incarichi-list.component.html',
   styleUrls: ['./incarichi-list.component.scss'],
 })
-export class IncarichiListComponent implements OnInit {
+export class IncarichiListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'key_ord',
     'servizio',
@@ -65,8 +65,9 @@ export class IncarichiListComponent implements OnInit {
   
 
 
-  @ViewChild(MatSort, { static: true }) sort: any;
-  @ViewChild(MatPaginator, { static: true }) paginator: any;
+  @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
+  @ViewChild(MatSort) sort: MatSort | null = null;
+  changeDetectorRefs: any;
 
   constructor(
     private router: Router,
@@ -74,6 +75,9 @@ export class IncarichiListComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar: MatSnackBar
   ) {}
+  ngAfterViewInit(): void {
+    this.paginatorPage();
+  }
 
   ngOnInit(): void {
     this.gestioneExistsIdSam();
@@ -106,10 +110,9 @@ export class IncarichiListComponent implements OnInit {
       .getIncarichi(idsam)
       .subscribe((incarichi: IIncarichi[]) => {
         this.list = [];
-        // console.log("totalelista",incarichi.length);
         this.totaleIncarichi = incarichi.length;
         this.gestioneViewIncarichi();
-        incarichi.forEach((incarico) => {
+        incarichi.forEach((incarico, index) => {
           this.incarichiService
             .getAllegati(incarico.key_ord, incarico.haccp)
             .subscribe((allegati) => {
@@ -123,20 +126,20 @@ export class IncarichiListComponent implements OnInit {
               };
               this.list.push(incaricoWithAllegati);
               if (this.list.length === incarichi.length) {
-                // tutte le chiamate sono terminate
-                this.dataSource = new MatTableDataSource(this.list);
+                this.dataSource.data = this.list; 
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
-                this.dataSource.paginator?.firstPage();
                 this.isLoading = false;
                 this.incarichiSubcription.add(
                   this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
                 );
+                this.changeDetectorRefs.detectChanges();
               }
             });
         });
       });
   }
+  
   
   onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
@@ -190,5 +193,9 @@ aggiornamentoFiltro(){
     this.incarichiSubcription.add(
     this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
     );
+}
+paginatorPage(){
+  if (this.paginator) this.dataSource.paginator = this.paginator;
+    if (this.sort) this.dataSource.sort = this.sort;
 }
 }
