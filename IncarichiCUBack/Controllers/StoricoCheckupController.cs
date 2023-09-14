@@ -26,7 +26,7 @@ namespace IncarichiCUServer.Controllers
         public async Task<IEnumerable<SP_StoricoCheckup_GetAllegatiList>> GetListAllegati(string keyord, int haccp)
         {
             string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiList] @keyord = '"+ keyord +"', @haccp = "+ haccp +"";
-            var result = await _context.SP_StoricoCheckup_GetAllegatiList.FromSqlRaw(StoredProc).ToListAsync();
+            var result = await _context.SP_StoricoCheckup_GetAllegatiList.FromSqlRaw(StoredProc).AsNoTracking().ToListAsync();
             return result;
         }
         [HttpGet("GetAllegatiData")]
