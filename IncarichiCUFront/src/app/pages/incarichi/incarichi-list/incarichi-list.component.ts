@@ -47,7 +47,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'DataAllegato',
     'Data_Rientro',
   ];
-
+  public allegatoSortAsc = true;
   public listAllegati: IAllegatiList[] = [];
   public list: IIncarichi[] = [];
   public selectedAllegati: IAllegatiList[] = [];
@@ -62,7 +62,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   public showIdSamError: boolean = false;
   public idsamPresent: boolean = true;
   private totaleIncarichi: number = 0;
-  
+
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
@@ -83,9 +83,9 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.gestioneExistsIdSam();
     this.getAllList();
     this.aggiornamentoFiltro();
-    this.isLoading = false; 
+    this.isLoading = false;
   }
-  
+
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
@@ -96,7 +96,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
       dataSource.filter = searchText;
     });
   }
-  
+
   getAllList() {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
@@ -126,7 +126,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
               };
               this.list.push(incaricoWithAllegati);
               if (this.list.length === incarichi.length) {
-                this.dataSource.data = this.list; 
+                this.dataSource.data = this.list;
                 this.dataSource.sort = this.sort;
                 this.dataSource.paginator = this.paginator;
                 this.isLoading = false;
@@ -139,8 +139,8 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
         });
       });
   }
-  
-  
+
+
   onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
     this.listAllegati = [];
@@ -155,9 +155,8 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
         })
     );
   }
-  hasAttachments(row: IIncarichi): boolean {
-    // Utilizzo la nuova proprietà 'hasAttachments' per capire se la riga ha allegati o meno
-    return row.hasAttachments ?? false;
+  hasAttachments(row: IIncarichi): number {
+    return row.hasAttachments ? 1 : 0;
   }
 existsIncarichi(){
   return this.totaleIncarichi>0;
@@ -167,7 +166,7 @@ gestioneViewIncarichi(){
   if(this.idsamPresent){
     if(this.existsIncarichi()){
       this.showIdSamError = false;
-    } 
+    }
   }
 }
 ngOnDestroy(): void {
@@ -179,13 +178,13 @@ gestioneExistsIdSam(){
     idsam = this.incarichiService.getIdsam();
   } catch (error) {
     this.showIdSamError = true;
-    this.isLoading = false; 
+    this.isLoading = false;
     return;
   }
 
   if (!idsam || idsam < 0) {
     this.showIdSamError = true;
-    this.isLoading = false; 
+    this.isLoading = false;
     return;
   }
 }
@@ -198,4 +197,18 @@ paginatorPage(){
   if (this.paginator) this.dataSource.paginator = this.paginator;
     if (this.sort) this.dataSource.sort = this.sort;
 }
+sortData(column: string) {
+    this.dataSource.data.sort((a, b) => {
+      if (a.hasAttachments && !b.hasAttachments) {
+        return this.allegatoSortAsc ? 1 : -1;
+      } else if (!a.hasAttachments && b.hasAttachments) {
+        return this.allegatoSortAsc ? -1 : 1;
+      } else {
+        return 0;
+      }
+    });
+    this.allegatoSortAsc = !this.allegatoSortAsc;
+    this.dataSource._updateChangeSubscription();
+  }
 }
+
