@@ -15,6 +15,8 @@
         public string? Annullato { get; set; }
         public DateTime? DataFattTecnico { get; set; }
         public int? Haccp { get; set; }
+        
+        public string? Tecnico { get; set; }
 
 
 
