@@ -15,5 +15,6 @@ export interface IIncarichi {
     dataFattTecnicoFormatted?: string;
     haccp: number
     hasAttachments?: boolean;
+    tecnico: string;
   }
 

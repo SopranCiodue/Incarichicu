@@ -31,6 +31,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'servizio',
     'eseguito',
     'dataFattTecnico',
+    'tecnico',
     'annullato',
     'codiceMago',
     'ragSociale',
