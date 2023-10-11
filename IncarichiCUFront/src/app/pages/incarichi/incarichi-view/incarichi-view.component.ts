@@ -16,7 +16,7 @@ export class IncarichiViewComponent implements OnInit {
   ngOnInit(): void {
     this.isLoading = true;
     this.incarichiService.getIdsamObservable().pipe(
-      delay(2000)
+      delay(500)
     ).subscribe(
       idsam => {
         this.idsam = idsam;
