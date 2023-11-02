@@ -10,15 +10,15 @@ mat-toolbar{
   }
 
 .menuGradient{
-    background: rgb(2,0,36);
-    background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
+    background: rgb(64, 120, 85);
+    // background: linear-gradient(90deg, rgba(2,0,36,1) 0%, rgba(9,9,121,1) 35%, rgba(0,212,255,1) 100%);
 }
 
-.menuShadow{
-    border-radius: 4px;
-    box-shadow:  8px -8px 25px #0c012f,
-                 -8px 8px 25px #110044;
-}
+// .menuShadow{
+//     border-radius: 4px;
+//     box-shadow:  8px -8px 25px #0c012f,
+//                  -8px 8px 25px #110044;
+// }
 
   mat-sidenav{
     position: fixed;
