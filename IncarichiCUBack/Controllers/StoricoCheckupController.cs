@@ -23,9 +23,9 @@ namespace IncarichiCUServer.Controllers
             return result;
         }
         [HttpGet("GetAllegatiList")]
-        public async Task<IEnumerable<SP_StoricoCheckup_GetAllegatiList>> GetListAllegati(string keyord, int haccp)
+        public async Task<IEnumerable<SP_StoricoCheckup_GetAllegatiList>> GetListAllegati(string keyord, int haccp, int PrendiAllegato, string Tipologia)
         {
-            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiList] @keyord = '"+ keyord +"', @haccp = "+ haccp +"";
+            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiList] @keyord = "+ keyord +", @haccp = "+ haccp + ",@PrendiAllegato = " + PrendiAllegato + ",@Tipologia = " + Tipologia + "";
             var result = await _context.SP_StoricoCheckup_GetAllegatiList.FromSqlRaw(StoredProc).AsNoTracking().ToListAsync();
             return result;
         }
