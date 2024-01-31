@@ -27,6 +27,7 @@ import { formatDate } from '@angular/common';
 })
 export class IncarichiListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
+    'tipologia',
     'key_ord',
     'servizio',
     'eseguito',
@@ -40,6 +41,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'comune',
     'indirizzo',
     'allegato',
+
   ];
   displayedColumnsAllegati: string[] = [
     'Keyord',

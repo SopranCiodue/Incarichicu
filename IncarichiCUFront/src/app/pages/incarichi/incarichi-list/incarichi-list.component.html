@@ -12,6 +12,10 @@
         <table mat-table [dataSource]="dataSource" matSort multiTemplateDataRows class="table">
 
           <!-- Colonne per ogni campo di IIncarichi -->
+          <ng-container matColumnDef="tipologia">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> <b>Tipologia</b> </th>
+            <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"><b>{{ row.tipologia }}</b> </td>
+          </ng-container>
           <ng-container matColumnDef="key_ord">
             <th mat-header-cell *matHeaderCellDef mat-sort-header> Incarico </th>
             <td mat-cell *matCellDef="let row" (click)="onRowClicked(row)"> {{ row.key_ord }} </td>

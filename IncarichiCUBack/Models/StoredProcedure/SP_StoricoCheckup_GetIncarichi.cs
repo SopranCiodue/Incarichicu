@@ -2,6 +2,7 @@
 {
     public class SP_StoricoCheckup_GetIncarichi
     {
+        public string? Tipologia { get; set; }
         public string CodiceMago { get; set; }
         public string? Sede { get; set; }
         public string? RagSociale { get; set; }
@@ -15,7 +16,7 @@
         public string? Annullato { get; set; }
         public DateTime? DataFattTecnico { get; set; }
         public int? Haccp { get; set; }
-        
+        public int? PrendiAllegato { get; set; }
         public string? Tecnico { get; set; }
 
 
