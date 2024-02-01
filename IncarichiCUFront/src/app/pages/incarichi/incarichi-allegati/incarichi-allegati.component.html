@@ -22,6 +22,10 @@
           <th mat-header-cell *matHeaderCellDef> Mansione </th>
           <td mat-cell *matCellDef="let allegato"> {{allegato.mansione}}</td>
         </ng-container>
+        <ng-container matColumnDef="modalita">
+          <th mat-header-cell *matHeaderCellDef> Modalità </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.modalita}}</td>
+        </ng-container>
         <ng-container matColumnDef="contatore">
           <th mat-header-cell *matHeaderCellDef> Contatore </th>
           <td mat-cell *matCellDef="let allegato"> {{allegato.contatore}}</td>
@@ -58,8 +62,8 @@
             </td>
           </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['tipologia','partecipante','dataCorso','codicefiscale','mansione','contatore', 'desc', 'dataAllegato', 'dataRientro' ]" class="my-header"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['tipologia','partecipante','dataCorso','codicefiscale','mansione','contatore', 'desc', 'dataAllegato', 'dataRientro'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="['tipologia','partecipante','dataCorso','codicefiscale','mansione','modalita','contatore', 'desc', 'dataAllegato', 'dataRientro' ]" class="my-header"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['tipologia','partecipante','dataCorso','codicefiscale','mansione','modalita','contatore', 'desc', 'dataAllegato', 'dataRientro'];"></tr>
       </table>
     </ng-container>
 

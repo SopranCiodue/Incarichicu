@@ -50,6 +50,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'dataCorso',
     'codicefiscale',
     'mansione',
+    'modalita',
     'contatore',
     'desc',
     'DataAllegato',

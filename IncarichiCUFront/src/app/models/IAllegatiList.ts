@@ -9,5 +9,5 @@ export interface IAllegatiList {
     dataCorso: Date
     codiceFiscale: string
     mansione: string
-
+    modalita: string
   }
