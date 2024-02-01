@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { IIncarichi } from '../models/IIncarichi';
 import { IAllegatiList } from '../models/IAllegatiList';
 import { environment } from '../environment/environment';
@@ -12,12 +12,12 @@ const baseUrl: string = environment.urlService;
 })
 export class IncarichiService {
   private searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
-  private selectedIncarichiData = { key_ord: '', haccp: 0 };
+  private selectedIncarichiData = { key_ord: '', haccp: 0, prendiAllegato: 0, tipologia: '' };
   private _idsamPresent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
   idsamPresent$ = this._idsamPresent.asObservable();
   private _showIdSamError = new BehaviorSubject<boolean>(false);
  showIdSamError = this._showIdSamError.asObservable();
- 
+
 
   constructor(private http: HttpClient, private router: Router) {
 
@@ -58,11 +58,11 @@ export class IncarichiService {
     const url = this.router.url;
     const urlSegments = url.split('/');
     const idsamSegment = urlSegments.find(segment => segment.includes('idsam'));
-  
+
     if (idsamSegment) {
       const idsam = idsamSegment.split('=')[1];
       // console.log('idsam ottenuto: ', idsam); // stampa il valore di idsam
-  
+
       if (!isNaN(Number(idsam)) && Number(idsam) > 0)  {
         // console.log('In servizio: showIdSamError è ', this._showIdSamError.value); // stampa il valore di showIdSamError
         return Number(idsam);
@@ -84,7 +84,7 @@ export class IncarichiService {
   public updateIdsamStatus(status: boolean): void {
     this._idsamPresent.next(status);
   }
-  
+
   getAllegatiData(
     rientro: number,
     key_ord: string,
@@ -110,19 +110,26 @@ export class IncarichiService {
   }
 
   getSearchObservable(): Observable<string> {
-    
+
     return this.searchSubject.asObservable();
   }
-  getAllegati(keyord: string, haccp: number): Observable<IAllegatiList[]> {
-    return this.http.get<IAllegatiList[]>(
-      baseUrl + 'GetAllegatiList?keyord=' + keyord + '&haccp=' + haccp
-    );
-  }
-  setSelectedIncarichiData(key_ord: string, haccp: number) {
-    this.selectedIncarichiData.key_ord = key_ord;
-    this.selectedIncarichiData.haccp = haccp;
+  getAllegati(keyord: string, haccp: number, prendiAllegato: number, tipologia: string): Observable<IAllegatiList[]> {
+    // Verifica se prendiAllegato è uguale a 0 e restituisci un observable vuoto
+  if (prendiAllegato === 0) {
+    console.warn('prendiAllegato è 0. Non verranno effettuate chiamate HTTP per gli allegati.');
+    return of([]); // Assicurati di importare 'of' da 'rxjs'
   }
 
+    return this.http.get<IAllegatiList[]>(
+      baseUrl + 'GetAllegatiList?keyord=' + keyord + '&haccp=' + haccp + '&prendiAllegato=' + prendiAllegato + '&tipologia=' + tipologia
+    );
+  }
+  setSelectedIncarichiData(key_ord: string, haccp: number, prendiAllegato: number, tipologia: string) {
+    this.selectedIncarichiData.key_ord = key_ord;
+    this.selectedIncarichiData.haccp = haccp;
+    this.selectedIncarichiData.prendiAllegato = prendiAllegato;
+    this.selectedIncarichiData.tipologia = tipologia;
+  }
   getSelectedIncarichiData() {
     return this.selectedIncarichiData;
   }

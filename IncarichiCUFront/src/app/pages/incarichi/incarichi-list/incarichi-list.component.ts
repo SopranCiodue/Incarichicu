@@ -45,6 +45,11 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   ];
   displayedColumnsAllegati: string[] = [
     'Keyord',
+    'tipologia',
+    'partecipante',
+    'dataCorso',
+    'codicefiscale',
+    'mansione',
     'contatore',
     'desc',
     'DataAllegato',
@@ -117,7 +122,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
         this.gestioneViewIncarichi();
         incarichi.forEach((incarico, index) => {
           this.incarichiService
-            .getAllegati(incarico.key_ord, incarico.haccp)
+            .getAllegati(incarico.key_ord, incarico.haccp, incarico.prendiAllegato, incarico.tipologia)
             .subscribe((allegati) => {
               const incaricoWithAllegati = {
                 ...incarico,
@@ -147,11 +152,11 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
     this.listAllegati = [];
-    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp);
+    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
     this.incarichiSubcription.add(
       // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
       this.incarichiService
-        .getAllegati(row.key_ord, row.haccp)
+        .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
         .subscribe((resp) => {
           this.listAllegati = resp;
           this.expandedElement = this.expandedElement === row ? null : row;

@@ -17,6 +17,6 @@ export interface IIncarichi {
     haccp: number
     hasAttachments?: boolean;
     tecnico: string;
-    prendiallegato: number
+    prendiAllegato: number
   }
 

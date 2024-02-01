@@ -4,5 +4,10 @@ export interface IAllegatiList {
     desc: string
     dataAllegato: Date
     data_Rientro: Date
-    
+    tipologia: string
+    partecipante: string
+    dataCorso: Date
+    codiceFiscale: string
+    mansione: string
+
   }
