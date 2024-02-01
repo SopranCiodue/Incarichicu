@@ -115,38 +115,37 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
       return;
     }
     this.isLoading = true;
-    this.incarichiService
-      .getIncarichi(idsam)
-      .subscribe((incarichi: IIncarichi[]) => {
-        this.list = [];
-        this.totaleIncarichi = incarichi.length;
-        this.gestioneViewIncarichi();
-        incarichi.forEach((incarico, index) => {
-          this.incarichiService
-            .getAllegati(incarico.key_ord, incarico.haccp, incarico.prendiAllegato, incarico.tipologia)
-            .subscribe((allegati) => {
-              const incaricoWithAllegati = {
-                ...incarico,
-                allegati,
-                dataFattTecnicoFormatted: incarico.dataFattTecnico
-                  ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
-                  : '',
-                hasAttachments: allegati && allegati.length > 0,
-              };
-              this.list.push(incaricoWithAllegati);
-              if (this.list.length === incarichi.length) {
-                this.dataSource.data = this.list;
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-                this.isLoading = false;
-                this.incarichiSubcription.add(
-                  this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
-                );
-                this.changeDetectorRefs.detectChanges();
-              }
-            });
+
+    this.incarichiService.getIncarichi(idsam).subscribe((incarichi: IIncarichi[]) => {
+      this.list = [];
+      this.totaleIncarichi = incarichi.length;
+      this.gestioneViewIncarichi();
+
+      const allegatiRequests = incarichi.map(incarico =>
+        this.incarichiService.getAllegati(incarico.key_ord, incarico.haccp, incarico.prendiAllegato, incarico.tipologia)
+          .pipe(map(allegati => ({ incarico, allegati })))
+      );
+
+      forkJoin(allegatiRequests).subscribe(results => {
+        results.forEach(({ incarico, allegati }) => {
+          const hasAttachments = allegati && allegati.length > 0;
+          const incaricoWithAllegati = {
+            ...incarico,
+            allegati,
+            dataFattTecnicoFormatted: incarico.dataFattTecnico
+              ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
+              : '',
+            hasAttachments
+          };
+          this.list.push(incaricoWithAllegati);
+          this.listAllegati.push(...allegati);
         });
+
+        this.dataSource.data = this.list;
+        this.isLoading = false;
+        this.changeDetectorRefs.detectChanges();
       });
+    });
   }
 
 
