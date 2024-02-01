@@ -164,8 +164,12 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
         })
     );
   }
-  hasAttachments(row: IIncarichi): number {
-    return row.hasAttachments ? 1 : 0;
+  hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
+    // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
+    const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
+
+    // Controlla se esiste almeno una riga con Tipologia = 'Allegato'
+    return matchingRows.some(allegato => allegato.tipologia.toLowerCase().includes('allegato'));
   }
 existsIncarichi(){
   return this.totaleIncarichi>0;

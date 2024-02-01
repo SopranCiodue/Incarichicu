@@ -70,11 +70,10 @@
           </ng-container>
           <ng-container matColumnDef="allegato">
             <th mat-header-cell *matHeaderCellDef mat-sort-header (click)="sortData('allegato')"> Allegato </th>
-            <td mat-cell *matCellDef="let row">{{ hasAttachments(row) ? 'Si' : 'No' }}
-            <mat-icon *ngIf="hasAttachments(row)">attach_file</mat-icon>
+            <td mat-cell *matCellDef="let row">
+              {{ hasAttachments(row, listAllegati) ? 'Si' : 'No' }}
+              <mat-icon *ngIf="hasAttachments(row, listAllegati)">attach_file</mat-icon>
             </td>
-
-
           </ng-container>
 
           <!-- Righe della tabella principale -->
