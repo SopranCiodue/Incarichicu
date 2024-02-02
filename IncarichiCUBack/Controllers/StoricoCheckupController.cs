@@ -25,14 +25,14 @@ namespace IncarichiCUServer.Controllers
         [HttpGet("GetAllegatiList")]
         public async Task<IEnumerable<SP_StoricoCheckup_GetAllegatiList>> GetListAllegati(string keyord, int haccp, int PrendiAllegato, string Tipologia)
         {
-            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiList] @keyord = "+ keyord +", @haccp = "+ haccp + ",@PrendiAllegato = " + PrendiAllegato + ",@Tipologia = " + Tipologia + "";
+            string StoredProc = "exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiList] @keyord = '"+ keyord +"', @haccp = "+ haccp + ",@PrendiAllegato = " + PrendiAllegato + ",@Tipologia = '" + Tipologia + "'";
             var result = await _context.SP_StoricoCheckup_GetAllegatiList.FromSqlRaw(StoredProc).AsNoTracking().ToListAsync();
             return result;
         }
         [HttpGet("GetAllegatiData")]
         public async Task<IActionResult> GetListAllegatiData(int rientro, string keyord, int haccp, int contatore)
         {
-            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = " + keyord + ", @haccp = "+ haccp +", @contatore = " + contatore + ", @rientro = " + rientro;
+            string storedProc = $"exec Net_ciodueit.dbo.[SP_StoricoCheckup_GetAllegatiData] @keyord = '" + keyord + "', @haccp = "+ haccp +", @contatore = " + contatore + ", @rientro = " + rientro;
             var result = _context.SP_StoricoCheckup_GetAllegatiData.FromSqlRaw(storedProc).AsEnumerable().FirstOrDefault();
 
             string fileName = "FileTest.rar";   
