@@ -38,7 +38,8 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
   @Input() allegati: IAllegatiList[] = [];
   @Input() expandedElement: any;
   isDownloading = false;
-
+  uniqueDownloadId: number = 0;
+  isCurrentFileDownloading: { [key: string]: boolean } = {};
   public incarichiSub: Subscription = new Subscription(); // Inizializza la Subscription
 
   constructor(private incarichiService: IncarichiService) {}
@@ -48,8 +49,14 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
     this.incarichiSub.unsubscribe();
   }
 
-  eseguiAzione(rientro: number, allegato: IAllegatiList) {
-    this.isDownloading = true;
+  eseguiAzione(rientro: number, allegato: IAllegatiList): void {
+    const fileId = allegato.contatore.toString(); // Usiamo l'id del file come chiave nell'oggetto
+
+    if (this.isCurrentFileDownloading[fileId]) {
+      // Se il file è già in fase di download, esci
+      return;
+    }
+
     const { key_ord, haccp } = this.incarichiService.getSelectedIncarichiData();
     const sub = this.incarichiService
       .getAllegatiData(rientro, key_ord, haccp, allegato.contatore)
@@ -58,14 +65,19 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
           const blob = new Blob([response], {
             type: 'application/x-rar-compressed',
           });
-          this.isDownloading = false;
           saveAs(blob, allegato.desc + '.rar');
         },
         (error) => {
           console.error('Error:', error);
+        },
+        () => {
+          this.isCurrentFileDownloading[fileId] = false; // Imposta lo stato del download su false dopo il completamento
           this.isDownloading = false;
         }
       );
-    this.incarichiSub.add(sub); // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
+
+    this.isCurrentFileDownloading[fileId] = true; // Imposta lo stato del download su true per il file corrente
+    this.isDownloading = true;
+    this.incarichiSub.add(sub);
   }
 }
