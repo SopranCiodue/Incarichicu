@@ -156,7 +156,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
   toggleExpandedElement(row: IIncarichi) {
     this.expandedElement = this.expandedElement === row ? null : row;
-  
+
     if (this.expandedElement) {
       this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
       this.incarichiSubcription.add(
@@ -169,9 +169,9 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
       );
     }
   }
- 
-  
-  
+
+
+
   hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
     // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
     const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
