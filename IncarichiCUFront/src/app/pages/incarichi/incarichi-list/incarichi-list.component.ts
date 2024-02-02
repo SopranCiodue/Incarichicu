@@ -156,22 +156,30 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
 
   toggleExpandedElement(row: IIncarichi) {
-    this.listAllegati = [];
-    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
-    this.incarichiSubcription.add(
-      this.incarichiService
-        .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
-        .subscribe((resp) => {
-          this.listAllegati = resp;
-          this.expandedElement = this.expandedElement === row ? null : row;
-
-          // Imposta il flag isRowClicked solo quando la riga viene cliccata
-          if (this.expandedElement !== null) {
+    // Verifica se stai chiudendo la riga corrente o aprendone una nuova
+    const isClosing = this.expandedElement === row;
+  
+    if (isClosing) {
+      this.expandedElement = null;
+      this.isRowClicked = false; // reimposta a false quando chiudi la riga
+    } else {
+      this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
+      this.incarichiSubcription.add(
+        this.incarichiService
+          .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
+          .subscribe((resp) => {
+            // Resettare this.listAllegati solo dopo aver ricevuto i nuovi dati
+            this.listAllegati = resp;
+            this.expandedElement = row;
+            // Aggiorna il flag isRowClicked solo quando la riga viene aperta
             this.isRowClicked = true;
-          }
-        })
-    );
+            this.changeDetectorRefs.detectChanges();
+          })
+      );
+    }
   }
+  
+  
   hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
     // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
     const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
