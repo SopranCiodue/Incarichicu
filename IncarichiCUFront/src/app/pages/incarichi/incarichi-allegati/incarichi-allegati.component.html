@@ -41,7 +41,7 @@
             <td mat-cell *matCellDef="let allegato">
               <div class="flex-container">
                 {{allegato.dataAllegato | date: 'dd/MM/yyyy'}}
-                <mat-icon [ngClass]="{'rotate-icon': isCurrentFileDownloading[allegato.contatore.toString()]}" *ngIf="!isCurrentFileDownloading[allegato.contatore.toString()]; else downloadingIcon" (click)="eseguiAzione(0, allegato)" class="icon-right">cloud_download</mat-icon>
+                <mat-icon *ngIf="!isPartecipante(allegato.tipologia)" [ngClass]="{'rotate-icon': isCurrentFileDownloading[allegato.contatore.toString()]}" (click)="eseguiAzione(0, allegato)" class="icon-right">cloud_download</mat-icon>
 
 <ng-template #downloadingIcon>
   <mat-icon class="icon-right spinner">hourglass_empty</mat-icon>

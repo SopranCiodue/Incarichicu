@@ -48,7 +48,10 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.incarichiSub.unsubscribe();
   }
-
+  //la doppia negazione !! converte in booleano: se trova partecipante è vero
+  isPartecipante(tipologia: string): boolean {
+    return !!tipologia && tipologia.toLowerCase() === 'partecipante';
+  }
   eseguiAzione(rientro: number, allegato: IAllegatiList): void {
     const fileId = allegato.contatore.toString(); // Usiamo l'id del file come chiave nell'oggetto
 
@@ -80,4 +83,5 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
     this.isDownloading = true;
     this.incarichiSub.add(sub);
   }
+
 }
