@@ -154,30 +154,22 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     });
   }
 
-
   toggleExpandedElement(row: IIncarichi) {
-    // Verifica se stai chiudendo la riga corrente o aprendone una nuova
-    const isClosing = this.expandedElement === row;
+    this.expandedElement = this.expandedElement === row ? null : row;
   
-    if (isClosing) {
-      this.expandedElement = null;
-      this.isRowClicked = false; // reimposta a false quando chiudi la riga
-    } else {
+    if (this.expandedElement) {
       this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
       this.incarichiSubcription.add(
         this.incarichiService
           .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
           .subscribe((resp) => {
-            // Resettare this.listAllegati solo dopo aver ricevuto i nuovi dati
             this.listAllegati = resp;
-            this.expandedElement = row;
-            // Aggiorna il flag isRowClicked solo quando la riga viene aperta
-            this.isRowClicked = true;
             this.changeDetectorRefs.detectChanges();
           })
       );
     }
   }
+ 
   
   
   hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
