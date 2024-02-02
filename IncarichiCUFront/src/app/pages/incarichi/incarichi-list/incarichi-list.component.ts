@@ -19,6 +19,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { formatDate } from '@angular/common';
+import { AfterContentChecked } from '@angular/core';
 
 @Component({
   selector: 'app-incarichi-list',
@@ -71,8 +72,8 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   public showIdSamError: boolean = false;
   public idsamPresent: boolean = true;
   private totaleIncarichi: number = 0;
-
-
+  public  allegatoColumnLoaded = false;
+  isRowClicked: boolean = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
@@ -94,7 +95,12 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.aggiornamentoFiltro();
     this.isLoading = false;
   }
-
+  ngAfterContentChecked(): void {
+    // Aggiorna il flag solo se la riga è espansa
+    if (this.expandedElement !== null && !this.isRowClicked) {
+      this.isRowClicked = true;
+    }
+  }
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
@@ -149,17 +155,20 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   }
 
 
-  onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
     this.listAllegati = [];
     this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
     this.incarichiSubcription.add(
-      // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
       this.incarichiService
         .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
         .subscribe((resp) => {
           this.listAllegati = resp;
           this.expandedElement = this.expandedElement === row ? null : row;
+
+          // Imposta il flag isRowClicked solo quando la riga viene cliccata
+          if (this.expandedElement !== null) {
+            this.isRowClicked = true;
+          }
         })
     );
   }
