@@ -141,7 +141,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
             dataFattTecnicoFormatted: incarico.dataFattTecnico
               ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
               : '',
-            hasAttachments
+            hasAttachments: hasAttachments && !allegati.some(a => a.tipologia.toLowerCase() === 'partecipante')
           };
           this.list.push(incaricoWithAllegati);
           this.listAllegati.push(...allegati);
@@ -172,13 +172,14 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
 
 
-  hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
-    // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
-    const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
+// Modifica la funzione hasAttachments
+hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
+  // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
+  const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
 
-    // Controlla se esiste almeno una riga con Tipologia = 'Allegato'
-    return matchingRows.some(allegato => allegato.tipologia.toLowerCase().includes('allegato'));
-  }
+  // Controlla se esiste almeno una riga con Tipologia uguale a 'PARTECIPANTE'
+  return matchingRows.some(allegato => allegato.tipologia.toLowerCase() === 'partecipante');
+}
 existsIncarichi(){
   return this.totaleIncarichi>0;
 }
