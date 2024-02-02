@@ -115,10 +115,6 @@ export class IncarichiService {
   }
   getAllegati(keyord: string, haccp: number, prendiAllegato: number, tipologia: string): Observable<IAllegatiList[]> {
     // Verifica se prendiAllegato è uguale a 0 e restituisci un observable vuoto
-  if (prendiAllegato === 0) {
-    console.warn('prendiAllegato è 0. Non verranno effettuate chiamate HTTP per gli allegati.');
-    return of([]); // Assicurati di importare 'of' da 'rxjs'
-  }
 
     return this.http.get<IAllegatiList[]>(
       baseUrl + 'GetAllegatiList?keyord=' + keyord + '&haccp=' + haccp + '&prendiAllegato=' + prendiAllegato + '&tipologia=' + tipologia
