@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription, of } from 'rxjs';
@@ -52,7 +52,6 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'codicefiscale',
     'mansione',
     'modalita',
-    'contatore',
     'desc',
     'DataAllegato',
     'Data_Rientro',
@@ -77,13 +76,14 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
-  changeDetectorRefs: any;
+
 
   constructor(
     private router: Router,
     private incarichiService: IncarichiService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
   ngAfterViewInit(): void {
     this.paginatorPage();
@@ -99,6 +99,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     // Aggiorna il flag solo se la riga è espansa
     if (this.expandedElement !== null && !this.isRowClicked) {
       this.isRowClicked = true;
+
     }
   }
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
