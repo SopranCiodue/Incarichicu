@@ -93,7 +93,6 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.gestioneExistsIdSam();
     this.getAllList();
     this.aggiornamentoFiltro();
-    this.isLoading = false;
   }
   ngAfterContentChecked(): void {
     // Aggiorna il flag solo se la riga è espansa
