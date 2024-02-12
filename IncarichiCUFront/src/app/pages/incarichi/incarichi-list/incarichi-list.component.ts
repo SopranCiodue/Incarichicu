@@ -73,6 +73,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   private totaleIncarichi: number = 0;
   public  allegatoColumnLoaded = false;
   isRowClicked: boolean = false;
+  public isLoadingDetails = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
@@ -85,6 +86,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     private snackBar: MatSnackBar,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
+
   ngAfterViewInit(): void {
     this.paginatorPage();
   }
@@ -93,8 +95,8 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.gestioneExistsIdSam();
     this.getAllList();
     this.aggiornamentoFiltro();
-    this.isLoading = false;
   }
+
   ngAfterContentChecked(): void {
     // Aggiorna il flag solo se la riga è espansa
     if (this.expandedElement !== null && !this.isRowClicked) {
@@ -102,6 +104,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
     }
   }
+
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       const dataStr = JSON.stringify(data).toLowerCase();
@@ -150,40 +153,52 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
         this.dataSource.data = this.list;
         this.isLoading = false;
-        this.changeDetectorRefs.detectChanges();
+        // this.changeDetectorRefs.detectChanges();
       });
     });
   }
 
   toggleExpandedElement(row: IIncarichi) {
-    this.expandedElement = this.expandedElement === row ? null : row;
-
-    if (this.expandedElement) {
-      this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
-      this.incarichiSubcription.add(
-        this.incarichiService
-          .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
-          .subscribe((resp) => {
-            this.listAllegati = resp;
-            this.changeDetectorRefs.detectChanges();
-          })
-      );
+    // Se la riga è già espansa, collassala senza caricare dati
+    if (this.expandedElement === row) {
+      this.expandedElement = null;
+      return;
     }
+  
+    // Indica l'inizio del caricamento e previene la visualizzazione immediata
+    this.isLoadingDetails = true;
+  
+    // Carica i nuovi dati prima di espandere la riga
+    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
+    this.incarichiSubcription.add(
+      this.incarichiService
+        .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
+        .subscribe((resp) => {
+          // Aggiorna i dati con quelli appena caricati
+          this.listAllegati = resp;
+  
+          // Espandi la riga solo dopo aver caricato i nuovi dati
+          this.expandedElement = row;
+  
+          // Completa il caricamento
+          this.isLoadingDetails = false;
+          this.changeDetectorRefs.detectChanges();
+        })
+    );
   }
-
-
 
 // Modifica la funzione hasAttachments
 hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
   // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
   const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
-
   // Controlla se esiste almeno una riga con Tipologia uguale a 'PARTECIPANTE'
   return matchingRows.some(allegato => allegato.tipologia.toLowerCase() === 'partecipante');
 }
+
 existsIncarichi(){
   return this.totaleIncarichi>0;
 }
+
 gestioneViewIncarichi(){
   this.showIdSamError = true;
   if(this.idsamPresent){
@@ -192,9 +207,11 @@ gestioneViewIncarichi(){
     }
   }
 }
+
 ngOnDestroy(): void {
   this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
 }
+
 gestioneExistsIdSam(){
   let idsam: number | null;
   try {
@@ -211,15 +228,18 @@ gestioneExistsIdSam(){
     return;
   }
 }
+
 aggiornamentoFiltro(){
     this.incarichiSubcription.add(
     this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
     );
 }
+
 paginatorPage(){
   if (this.paginator) this.dataSource.paginator = this.paginator;
     if (this.sort) this.dataSource.sort = this.sort;
 }
+
 sortData(column: string) {
     this.dataSource.data.sort((a, b) => {
       if (a.hasAttachments && !b.hasAttachments) {
