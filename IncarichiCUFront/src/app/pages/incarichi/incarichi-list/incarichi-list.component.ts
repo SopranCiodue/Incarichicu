@@ -104,18 +104,31 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
     }
   }
-
-  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
+  
+  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>, listAllegati: IAllegatiList[]) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
-      const dataStr = JSON.stringify(data).toLowerCase();
-      return dataStr.indexOf(filter) != -1;
+      // Concatena dinamicamente i valori dei campi su cui desideri filtrare in una stringa e la trasforma in minuscolo
+      let dataStr = Object.values(data).join(' ').toLowerCase();
+      
+      // Se ci sono righe figlie (allegati), concatena anche i valori dei campi desiderati di ogni allegato
+      const matchingRows = listAllegati.filter(allegato => allegato.keyord === data.key_ord);
+      for (const allegato of matchingRows) {
+        const allegatoValues = Object.values(allegato);
+        dataStr += ' ' + allegatoValues.join(' ').toLowerCase(); // Aggiungi i campi desiderati di IAllegatiList
+      }
+      
+      // Confronta la stringa dei dati con il filtro e restituisce true se contiene il filtro
+      return dataStr.includes(filter.toLowerCase());
     };
+  
+    // Si sottoscrive all'observable per ricevere le modifiche nel testo di ricerca
     return incarichiService.getSearchObservable().subscribe((searchText: string) => {
-      searchText = searchText.trim().toLowerCase();
-      dataSource.filter = searchText;
+      // Trasforma il testo di ricerca in minuscolo e applica il filtro alla fonte dei dati
+      dataSource.filter = searchText.trim().toLowerCase();
     });
   }
-
+  
+  
   getAllList() {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
@@ -230,8 +243,9 @@ gestioneExistsIdSam(){
 }
 
 aggiornamentoFiltro(){
+  console.log("filtroAllegati:", this.listAllegati)
     this.incarichiSubcription.add(
-    this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+    this.setupFilterAndSubscription(this.incarichiService, this.dataSource, this.listAllegati)
     );
 }
 
