@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 import { Router } from '@angular/router';
 import { Observable, Subject, Subscription, of } from 'rxjs';
@@ -19,6 +19,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { formatDate } from '@angular/common';
+import { AfterContentChecked } from '@angular/core';
 
 @Component({
   selector: 'app-incarichi-list',
@@ -27,6 +28,7 @@ import { formatDate } from '@angular/common';
 })
 export class IncarichiListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
+    'tipologia',
     'key_ord',
     'servizio',
     'eseguito',
@@ -40,10 +42,16 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'comune',
     'indirizzo',
     'allegato',
+
   ];
   displayedColumnsAllegati: string[] = [
     'Keyord',
-    'contatore',
+    'tipologia',
+    'partecipante',
+    'dataCorso',
+    'codiceFiscale',
+    'mansione',
+    'modalità',
     'desc',
     'DataAllegato',
     'Data_Rientro',
@@ -63,19 +71,22 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   public showIdSamError: boolean = false;
   public idsamPresent: boolean = true;
   private totaleIncarichi: number = 0;
-
-
+  public  allegatoColumnLoaded = false;
+  isRowClicked: boolean = false;
+  public isLoadingDetails = false;
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
-  changeDetectorRefs: any;
+
 
   constructor(
     private router: Router,
     private incarichiService: IncarichiService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private changeDetectorRefs: ChangeDetectorRef
   ) {}
+
   ngAfterViewInit(): void {
     this.paginatorPage();
   }
@@ -84,20 +95,40 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.gestioneExistsIdSam();
     this.getAllList();
     this.aggiornamentoFiltro();
-    this.isLoading = false;
   }
 
-  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>) {
+  ngAfterContentChecked(): void {
+    // Aggiorna il flag solo se la riga è espansa
+    if (this.expandedElement !== null && !this.isRowClicked) {
+      this.isRowClicked = true;
+
+    }
+  }
+  
+  setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>, listAllegati: IAllegatiList[]) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
-      const dataStr = JSON.stringify(data).toLowerCase();
-      return dataStr.indexOf(filter) != -1;
+      // Concatena dinamicamente i valori dei campi su cui desideri filtrare in una stringa e la trasforma in minuscolo
+      let dataStr = Object.values(data).join(' ').toLowerCase();
+      
+      // Se ci sono righe figlie (allegati), concatena anche i valori dei campi desiderati di ogni allegato
+      const matchingRows = listAllegati.filter(allegato => allegato.keyord === data.key_ord);
+      for (const allegato of matchingRows) {
+        const allegatoValues = Object.values(allegato);
+        dataStr += ' ' + allegatoValues.join(' ').toLowerCase(); // Aggiungi i campi desiderati di IAllegatiList
+      }
+      
+      // Confronta la stringa dei dati con il filtro e restituisce true se contiene il filtro
+      return dataStr.includes(filter.toLowerCase());
     };
+  
+    // Si sottoscrive all'observable per ricevere le modifiche nel testo di ricerca
     return incarichiService.getSearchObservable().subscribe((searchText: string) => {
-      searchText = searchText.trim().toLowerCase();
-      dataSource.filter = searchText;
+      // Trasforma il testo di ricerca in minuscolo e applica il filtro alla fonte dei dati
+      dataSource.filter = searchText.trim().toLowerCase();
     });
   }
-
+  
+  
   getAllList() {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
@@ -107,61 +138,80 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
       return;
     }
     this.isLoading = true;
-    this.incarichiService
-      .getIncarichi(idsam)
-      .subscribe((incarichi: IIncarichi[]) => {
-        this.list = [];
-        this.totaleIncarichi = incarichi.length;
-        this.gestioneViewIncarichi();
-        incarichi.forEach((incarico, index) => {
-          this.incarichiService
-            .getAllegati(incarico.key_ord, incarico.haccp)
-            .subscribe((allegati) => {
-              const incaricoWithAllegati = {
-                ...incarico,
-                allegati,
-                dataFattTecnicoFormatted: incarico.dataFattTecnico
-                  ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
-                  : '',
-                hasAttachments: allegati && allegati.length > 0,
-              };
-              this.list.push(incaricoWithAllegati);
-              if (this.list.length === incarichi.length) {
-                this.dataSource.data = this.list;
-                this.dataSource.sort = this.sort;
-                this.dataSource.paginator = this.paginator;
-                this.isLoading = false;
-                this.incarichiSubcription.add(
-                  this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
-                );
-                this.changeDetectorRefs.detectChanges();
-              }
-            });
+
+    this.incarichiService.getIncarichi(idsam).subscribe((incarichi: IIncarichi[]) => {
+      this.list = [];
+      this.totaleIncarichi = incarichi.length;
+      this.gestioneViewIncarichi();
+
+      const allegatiRequests = incarichi.map(incarico =>
+        this.incarichiService.getAllegati(incarico.key_ord, incarico.haccp, incarico.prendiAllegato, incarico.tipologia)
+          .pipe(map(allegati => ({ incarico, allegati })))
+      );
+
+      forkJoin(allegatiRequests).subscribe(results => {
+        results.forEach(({ incarico, allegati }) => {
+          const hasAttachments = allegati && allegati.length > 0;
+          const incaricoWithAllegati = {
+            ...incarico,
+            allegati,
+            dataFattTecnicoFormatted: incarico.dataFattTecnico
+              ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
+              : '',
+            hasAttachments: hasAttachments && !allegati.some(a => a.tipologia.toLowerCase() === 'partecipante')
+          };
+          this.list.push(incaricoWithAllegati);
+          this.listAllegati.push(...allegati);
         });
+
+        this.dataSource.data = this.list;
+        this.isLoading = false;
+        // this.changeDetectorRefs.detectChanges();
       });
+    });
   }
 
-
-  onRowClicked(incarichi: IIncarichi) {}
   toggleExpandedElement(row: IIncarichi) {
-    this.listAllegati = [];
-    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp);
+    // Se la riga è già espansa, collassala senza caricare dati
+    if (this.expandedElement === row) {
+      this.expandedElement = null;
+      return;
+    }
+  
+    // Indica l'inizio del caricamento e previene la visualizzazione immediata
+    this.isLoadingDetails = true;
+  
+    // Carica i nuovi dati prima di espandere la riga
+    this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
     this.incarichiSubcription.add(
-      // Aggiungi la nuova sottoscrizione all'elenco delle sottoscrizioni
       this.incarichiService
-        .getAllegati(row.key_ord, row.haccp)
+        .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
         .subscribe((resp) => {
+          // Aggiorna i dati con quelli appena caricati
           this.listAllegati = resp;
-          this.expandedElement = this.expandedElement === row ? null : row;
+  
+          // Espandi la riga solo dopo aver caricato i nuovi dati
+          this.expandedElement = row;
+  
+          // Completa il caricamento
+          this.isLoadingDetails = false;
+          this.changeDetectorRefs.detectChanges();
         })
     );
   }
-  hasAttachments(row: IIncarichi): number {
-    return row.hasAttachments ? 1 : 0;
-  }
+
+// Modifica la funzione hasAttachments
+hasAttachments(incarico: IIncarichi, listAllegati: IAllegatiList[]): boolean {
+  // Filtra le righe di IAllegatiList che corrispondono alla chiave_ord dell'incarico
+  const matchingRows = listAllegati.filter(allegato => allegato.keyord === incarico.key_ord);
+  // Controlla se esiste almeno una riga con Tipologia uguale a 'PARTECIPANTE'
+  return matchingRows.some(allegato => allegato.tipologia.toLowerCase() === 'partecipante');
+}
+
 existsIncarichi(){
   return this.totaleIncarichi>0;
 }
+
 gestioneViewIncarichi(){
   this.showIdSamError = true;
   if(this.idsamPresent){
@@ -170,9 +220,11 @@ gestioneViewIncarichi(){
     }
   }
 }
+
 ngOnDestroy(): void {
   this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
 }
+
 gestioneExistsIdSam(){
   let idsam: number | null;
   try {
@@ -189,15 +241,19 @@ gestioneExistsIdSam(){
     return;
   }
 }
+
 aggiornamentoFiltro(){
+  console.log("filtroAllegati:", this.listAllegati)
     this.incarichiSubcription.add(
-    this.setupFilterAndSubscription(this.incarichiService, this.dataSource)
+    this.setupFilterAndSubscription(this.incarichiService, this.dataSource, this.listAllegati)
     );
 }
+
 paginatorPage(){
   if (this.paginator) this.dataSource.paginator = this.paginator;
     if (this.sort) this.dataSource.sort = this.sort;
 }
+
 sortData(column: string) {
     this.dataSource.data.sort((a, b) => {
       if (a.hasAttachments && !b.hasAttachments) {

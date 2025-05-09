@@ -2,9 +2,33 @@
     <ng-container *ngIf="allegati && allegati.length; else noData">
       <table mat-table [dataSource]="allegati" class="mat-elevation-z8">
 
+        <ng-container matColumnDef="tipologia">
+          <th mat-header-cell *matHeaderCellDef> Tipologia </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.tipologia}}</td>
+        </ng-container>
+        <ng-container matColumnDef="partecipante">
+          <th mat-header-cell *matHeaderCellDef> Partecipante </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.partecipante}}</td>
+        </ng-container>
+        <ng-container matColumnDef="dataCorso">
+          <th mat-header-cell *matHeaderCellDef> DataCorso </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.dataCorso | date: 'dd/MM/yyyy'}}</td>
+        </ng-container>
+        <ng-container matColumnDef="codiceFiscale">
+          <th mat-header-cell *matHeaderCellDef> CodiceFiscale </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.codiceFiscale}}</td>
+        </ng-container>
+        <ng-container matColumnDef="mansione">
+          <th mat-header-cell *matHeaderCellDef> Mansione </th>
+          <td mat-cell *matCellDef="let allegato"> {{allegato.mansione}}</td>
+        </ng-container>
+        <ng-container matColumnDef="modalità">
+          <th mat-header-cell *matHeaderCellDef> Modalità </th>
+          <td mat-cell *matCellDef="let allegato"> {{ allegato['modalità']}}</td>
+        </ng-container>
         <ng-container matColumnDef="contatore">
           <th mat-header-cell *matHeaderCellDef> Contatore </th>
-          <td mat-cell *matCellDef="let allegato"> {{allegato.contatore}}</td>
+          <td mat-cell *matCellDef="let allegato" style="display: none;"> {{allegato.contatore}}</td>
         </ng-container>
 
         <ng-container matColumnDef="desc">
@@ -17,8 +41,14 @@
             <td mat-cell *matCellDef="let allegato">
               <div class="flex-container">
                 {{allegato.dataAllegato | date: 'dd/MM/yyyy'}}
-                <mat-icon *ngIf="!isDownloading" (click)="eseguiAzione(0, allegato)" class="icon-right">cloud_download</mat-icon>
-                <mat-icon *ngIf="isDownloading" class="icon-right spinner">hourglass_empty</mat-icon>
+                <mat-icon *ngIf="!isPartecipante(allegato.tipologia)" (click)="eseguiAzione(0, allegato)" class="icon-right">
+                  <ng-container *ngIf="!isCurrentFileDownloading[allegato.contatore.toString()] else downloadingIcon">
+                    cloud_download
+                  </ng-container>
+                  <ng-template #downloadingIcon>
+                    <mat-icon class="icon-right spinner">hourglass_empty</mat-icon>
+                  </ng-template>
+                </mat-icon>
               </div>
             </td>
           </ng-container>
@@ -38,8 +68,8 @@
             </td>
           </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="['contatore', 'desc', 'dataAllegato', 'dataRientro']" class="my-header"></tr>
-        <tr mat-row *matRowDef="let row; columns: ['contatore', 'desc', 'dataAllegato', 'dataRientro'];"></tr>
+        <tr mat-header-row *matHeaderRowDef="['tipologia','partecipante','dataCorso','codiceFiscale','mansione','modalità', 'desc', 'dataAllegato', 'dataRientro' ]" class="my-header"></tr>
+        <tr mat-row *matRowDef="let row; columns: ['tipologia','partecipante','dataCorso','codiceFiscale','mansione','modalità', 'desc', 'dataAllegato', 'dataRientro'];"></tr>
       </table>
     </ng-container>
 

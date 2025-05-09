@@ -1,5 +1,6 @@
 export interface IIncarichi {
     keyOrd(keyOrd: any): unknown
+    tipologia: string
     codiceMago: string
     sede: string
     ragSociale: string
@@ -16,5 +17,6 @@ export interface IIncarichi {
     haccp: number
     hasAttachments?: boolean;
     tecnico: string;
+    prendiAllegato: number
   }
 
