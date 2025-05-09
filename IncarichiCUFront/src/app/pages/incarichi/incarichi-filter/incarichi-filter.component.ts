@@ -24,10 +24,11 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.loadListIncarichi();
   }
-  
+
   existsIncarichi(){
     return this.totaleIncarichi>0;
   }
+
   gestioneViewIncarichi(){
     if (this.idsamPresent && this.existsIncarichi()) {
       this.showIdSamError = false;
@@ -37,6 +38,7 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
       this.showSearchBar = false;  // Nascondi la barra di ricerca altrimenti
     }
   }
+
   loadListIncarichi(){
     this.subscription = this.incarichiService.getIdsamObservable().subscribe((idsam: number | null) => {
       if (idsam === null) {
@@ -60,6 +62,7 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
       this.showSearchBar = false;  // nasconde la barra di ricerca
     });
   }
+
   onSearchTextChanged(searchText: string) {
     this.incarichiService.updateSearch(searchText);
   }
@@ -68,5 +71,3 @@ export class IncarichiFilterComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 }
-
-

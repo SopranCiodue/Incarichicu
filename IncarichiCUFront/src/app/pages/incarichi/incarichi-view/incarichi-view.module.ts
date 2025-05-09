@@ -5,12 +5,8 @@ import { IncarichiViewRoutingModule } from './incarichi-view-routing.module';
 import { IncarichiViewComponent } from './incarichi-view.component';
 import { IncarichiListModule } from '../incarichi-list/incarichi-list.module';
 import { IncarichiFilterModule } from '../incarichi-filter/incarichi-filter.module';
-import { TitlePageComponent } from 'src/app/components/title-page/title-page.component';
-import { TitlePageModule } from 'src/app/components/title-page/title-page.module';
-import { HeaderPageModule } from 'src/app/components/header-page/header-page.module';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 
 @NgModule({
   declarations: [
@@ -21,8 +17,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     IncarichiViewRoutingModule,
     IncarichiListModule,
     IncarichiFilterModule,
-    TitlePageModule,
-    HeaderPageModule,
     MatSidenavModule,
     MatProgressSpinnerModule,
   ]

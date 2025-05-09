@@ -5,12 +5,11 @@ import { IAllegatiList } from '../models/IAllegatiList';
 import { environment } from '../environment/environment';
 import { Router } from '@angular/router';
 
-const baseUrl: string = environment.urlService;
-
 @Injectable({
   providedIn: 'root',
 })
 export class IncarichiService {
+  private baseUrl = environment.urlService;
   private searchSubject: BehaviorSubject<string> = new BehaviorSubject('');
   private selectedIncarichiData = { key_ord: '', haccp: 0, prendiAllegato: 0, tipologia: '' };
   private _idsamPresent: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(true);
@@ -21,11 +20,11 @@ export class IncarichiService {
   constructor(private http: HttpClient, private router: Router) {}
 
   getIncarichi(idsam: number): Observable<any> {
-    return this.http.get(baseUrl + 'GetIncarichi?idsam=' + idsam);
+    return this.http.get(this.baseUrl + 'GetIncarichi?idsam=' + idsam);
   }
 
   getAllegatiList(): Observable<any> {
-    return this.http.get(baseUrl + 'GetAllegatiList');
+    return this.http.get(this.baseUrl + 'GetAllegatiList');
   }
 
   getIdsamObservable(): Observable<number | null> {
@@ -73,7 +72,7 @@ export class IncarichiService {
 
   getAllegatiData(rientro: number, key_ord: string, haccp: number, contatore: number): Observable<any> {
     return this.http.get(
-      baseUrl +
+      this.baseUrl +
         'GetAllegatiData?rientro=' +
         rientro +
         '&keyord=' +
@@ -96,7 +95,7 @@ export class IncarichiService {
 
   getAllegati(keyord: string, haccp: number, prendiAllegato: number, tipologia: string): Observable<IAllegatiList[]> {
     return this.http.get<IAllegatiList[]>(
-      baseUrl +
+      this.baseUrl +
         'GetAllegatiList?keyord=' +
         keyord +
         '&haccp=' +

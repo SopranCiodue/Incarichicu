@@ -44,18 +44,6 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     'allegato',
 
   ];
-  displayedColumnsAllegati: string[] = [
-    'Keyord',
-    'tipologia',
-    'partecipante',
-    'dataCorso',
-    'codiceFiscale',
-    'mansione',
-    'modalità',
-    'desc',
-    'DataAllegato',
-    'Data_Rientro',
-  ];
   public allegatoSortAsc = true;
   public listAllegati: IAllegatiList[] = [];
   public list: IIncarichi[] = [];
@@ -80,10 +68,7 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    private router: Router,
     private incarichiService: IncarichiService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar,
     private changeDetectorRefs: ChangeDetectorRef
   ) {}
 
@@ -104,31 +89,31 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
 
     }
   }
-  
+
   setupFilterAndSubscription(incarichiService: IncarichiService, dataSource: MatTableDataSource<IIncarichi>, listAllegati: IAllegatiList[]) {
     dataSource.filterPredicate = (data: IIncarichi, filter: string) => {
       // Concatena dinamicamente i valori dei campi su cui desideri filtrare in una stringa e la trasforma in minuscolo
       let dataStr = Object.values(data).join(' ').toLowerCase();
-      
+
       // Se ci sono righe figlie (allegati), concatena anche i valori dei campi desiderati di ogni allegato
       const matchingRows = listAllegati.filter(allegato => allegato.keyord === data.key_ord);
       for (const allegato of matchingRows) {
         const allegatoValues = Object.values(allegato);
         dataStr += ' ' + allegatoValues.join(' ').toLowerCase(); // Aggiungi i campi desiderati di IAllegatiList
       }
-      
+
       // Confronta la stringa dei dati con il filtro e restituisce true se contiene il filtro
       return dataStr.includes(filter.toLowerCase());
     };
-  
+
     // Si sottoscrive all'observable per ricevere le modifiche nel testo di ricerca
     return incarichiService.getSearchObservable().subscribe((searchText: string) => {
       // Trasforma il testo di ricerca in minuscolo e applica il filtro alla fonte dei dati
       dataSource.filter = searchText.trim().toLowerCase();
     });
   }
-  
-  
+
+
   getAllList() {
     const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
     if (!idsam) {
@@ -177,10 +162,10 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
       this.expandedElement = null;
       return;
     }
-  
+
     // Indica l'inizio del caricamento e previene la visualizzazione immediata
     this.isLoadingDetails = true;
-  
+
     // Carica i nuovi dati prima di espandere la riga
     this.incarichiService.setSelectedIncarichiData(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia);
     this.incarichiSubcription.add(
@@ -189,10 +174,10 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
         .subscribe((resp) => {
           // Aggiorna i dati con quelli appena caricati
           this.listAllegati = resp;
-  
+
           // Espandi la riga solo dopo aver caricato i nuovi dati
           this.expandedElement = row;
-  
+
           // Completa il caricamento
           this.isLoadingDetails = false;
           this.changeDetectorRefs.detectChanges();
