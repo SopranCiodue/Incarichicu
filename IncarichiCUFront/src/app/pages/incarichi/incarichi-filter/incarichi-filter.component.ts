@@ -4,9 +4,10 @@ import { IIncarichi } from 'src/app/models/IIncarichi';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 
 @Component({
-  selector: 'app-incarichi-filter',
-  templateUrl: './incarichi-filter.component.html',
-  styleUrls: ['./incarichi-filter.component.scss'],
+    selector: 'app-incarichi-filter',
+    templateUrl: './incarichi-filter.component.html',
+    styleUrls: ['./incarichi-filter.component.scss'],
+    standalone: false
 })
 export class IncarichiFilterComponent implements OnInit, OnDestroy {
   searchText = '';

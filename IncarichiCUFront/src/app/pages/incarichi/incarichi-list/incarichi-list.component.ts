@@ -22,9 +22,10 @@ import { formatDate } from '@angular/common';
 import { AfterContentChecked } from '@angular/core';
 
 @Component({
-  selector: 'app-incarichi-list',
-  templateUrl: './incarichi-list.component.html',
-  styleUrls: ['./incarichi-list.component.scss'],
+    selector: 'app-incarichi-list',
+    templateUrl: './incarichi-list.component.html',
+    styleUrls: ['./incarichi-list.component.scss'],
+    standalone: false
 })
 export class IncarichiListComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
