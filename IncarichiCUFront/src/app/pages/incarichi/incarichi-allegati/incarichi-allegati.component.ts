@@ -6,7 +6,7 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import * as saveAs from 'file-saver';
+import FileSaver from 'file-saver';
 import { Subscription } from 'rxjs';
 import { IAllegatiList } from 'src/app/models/IAllegatiList';
 import { IncarichiService } from 'src/app/services/incarichi.service';
@@ -68,7 +68,7 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
           const blob = new Blob([response], {
             type: 'application/x-rar-compressed',
           });
-          saveAs(blob, allegato.desc + '.rar');
+          FileSaver(blob, allegato.desc + '.rar');
         },
         (error) => {
           console.error('Error:', error);
