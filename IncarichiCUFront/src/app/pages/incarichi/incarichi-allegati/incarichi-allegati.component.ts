@@ -12,22 +12,28 @@ import { IAllegatiList } from 'src/app/models/IAllegatiList';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 
 @Component({
-    selector: 'app-incarichi-allegati',
-    templateUrl: './incarichi-allegati.component.html',
-    styleUrls: ['./incarichi-allegati.component.scss'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({
-                height: '0px',
-                minHeight: '0',
-                display: 'none',
-                visibility: 'hidden',
-            })),
-            state('expanded', style({ height: '*', visibility: 'visible' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    standalone: false
+  selector: 'app-incarichi-allegati',
+  templateUrl: './incarichi-allegati.component.html',
+  styleUrls: ['./incarichi-allegati.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state(
+        'collapsed',
+        style({
+          height: '0px',
+          minHeight: '0',
+          display: 'none',
+          visibility: 'hidden',
+        }),
+      ),
+      state('expanded', style({ height: '*', visibility: 'visible' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ),
+    ]),
+  ],
+  standalone: false,
 })
 export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
   @Input() allegati: IAllegatiList[] = [];
@@ -71,12 +77,11 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
         () => {
           this.isCurrentFileDownloading[fileId] = false; // Imposta lo stato del download su false dopo il completamento
           this.isDownloading = false;
-        }
+        },
       );
 
     this.isCurrentFileDownloading[fileId] = true; // Imposta lo stato del download su true per il file corrente
     this.isDownloading = true;
     this.incarichiSub.add(sub);
   }
-
 }
