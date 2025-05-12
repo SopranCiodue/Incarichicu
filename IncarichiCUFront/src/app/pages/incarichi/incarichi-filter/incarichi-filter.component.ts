@@ -1,13 +1,17 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { IIncarichi } from 'src/app/models/IIncarichi';
 import { IncarichiService } from 'src/app/services/incarichi.service';
+import { NgIf } from '@angular/common';
+import { MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatInput } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-incarichi-filter',
   templateUrl: './incarichi-filter.component.html',
   styleUrls: ['./incarichi-filter.component.scss'],
-  standalone: false,
+  imports: [NgIf, MatFormField, MatLabel, MatInput, FormsModule],
 })
 export class IncarichiFilterComponent implements OnInit, OnDestroy {
   searchText = '';

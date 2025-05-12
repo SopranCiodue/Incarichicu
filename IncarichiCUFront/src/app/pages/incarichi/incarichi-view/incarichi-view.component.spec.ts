@@ -8,8 +8,8 @@ describe('IncarichiViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IncarichiViewComponent ]
-    })
+    imports: [IncarichiViewComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(IncarichiViewComponent);

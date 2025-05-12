@@ -10,6 +10,20 @@ import FileSaver from 'file-saver';
 import { Subscription } from 'rxjs';
 import { IAllegatiList } from 'src/app/models/IAllegatiList';
 import { IncarichiService } from 'src/app/services/incarichi.service';
+import { DatePipe, NgIf } from '@angular/common';
+import {
+  MatCell,
+  MatCellDef,
+  MatColumnDef,
+  MatHeaderCell,
+  MatHeaderCellDef,
+  MatHeaderRow,
+  MatHeaderRowDef,
+  MatRow,
+  MatRowDef,
+  MatTable,
+} from '@angular/material/table';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-incarichi-allegati',
@@ -33,7 +47,21 @@ import { IncarichiService } from 'src/app/services/incarichi.service';
       ),
     ]),
   ],
-  standalone: false,
+  imports: [
+    NgIf,
+    MatTable,
+    MatColumnDef,
+    MatHeaderCellDef,
+    MatHeaderCell,
+    MatCellDef,
+    MatCell,
+    MatIcon,
+    MatHeaderRowDef,
+    MatHeaderRow,
+    MatRowDef,
+    MatRow,
+    DatePipe,
+  ],
 })
 export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
   @Input() allegati: IAllegatiList[] = [];
