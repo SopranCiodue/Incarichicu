@@ -8,8 +8,8 @@ describe('IncarichiListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ IncarichiListComponent ]
-    })
+    imports: [IncarichiListComponent]
+})
     .compileComponents();
 
     fixture = TestBed.createComponent(IncarichiListComponent);

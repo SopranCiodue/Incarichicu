@@ -2,12 +2,12 @@
   <mat-sidenav-content>
     <div class="distacco">
       <h1 style="padding-left: 15px">{{ 'Storico Incarichi' }}</h1>
-      <mat-progress-spinner class="spinner" *ngIf="isLoading" mode="indeterminate"></mat-progress-spinner>
-      <app-incarichi-filter *ngIf="!isLoading"></app-incarichi-filter>
-      <app-incarichi-list *ngIf="!isLoading"></app-incarichi-list>
+      <mat-progress-spinner
+        class="spinner"
+        *ngIf="isLoading"
+        mode="indeterminate" />
+      <app-incarichi-filter *ngIf="!isLoading" />
+      <app-incarichi-list *ngIf="!isLoading" />
     </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-
-
