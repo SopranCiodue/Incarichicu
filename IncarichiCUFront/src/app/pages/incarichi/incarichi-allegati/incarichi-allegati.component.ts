@@ -6,33 +6,28 @@ import {
   trigger,
 } from '@angular/animations';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import * as saveAs from 'file-saver';
+import FileSaver from 'file-saver';
 import { Subscription } from 'rxjs';
 import { IAllegatiList } from 'src/app/models/IAllegatiList';
 import { IncarichiService } from 'src/app/services/incarichi.service';
 
 @Component({
-  selector: 'app-incarichi-allegati',
-  templateUrl: './incarichi-allegati.component.html',
-  styleUrls: ['./incarichi-allegati.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state(
-        'collapsed',
-        style({
-          height: '0px',
-          minHeight: '0',
-          display: 'none',
-          visibility: 'hidden',
-        })
-      ),
-      state('expanded', style({ height: '*', visibility: 'visible' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
+    selector: 'app-incarichi-allegati',
+    templateUrl: './incarichi-allegati.component.html',
+    styleUrls: ['./incarichi-allegati.component.scss'],
+    animations: [
+        trigger('detailExpand', [
+            state('collapsed', style({
+                height: '0px',
+                minHeight: '0',
+                display: 'none',
+                visibility: 'hidden',
+            })),
+            state('expanded', style({ height: '*', visibility: 'visible' })),
+            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+        ]),
+    ],
+    standalone: false
 })
 export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
   @Input() allegati: IAllegatiList[] = [];
@@ -68,7 +63,7 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
           const blob = new Blob([response], {
             type: 'application/x-rar-compressed',
           });
-          saveAs(blob, allegato.desc + '.rar');
+          FileSaver(blob, allegato.desc + '.rar');
         },
         (error) => {
           console.error('Error:', error);

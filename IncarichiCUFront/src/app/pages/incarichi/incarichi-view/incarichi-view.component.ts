@@ -3,9 +3,10 @@ import { IncarichiService } from 'src/app/services/incarichi.service';
 import { delay } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-incarichi-view',
-  templateUrl: './incarichi-view.component.html',
-  styleUrls: ['./incarichi-view.component.scss']
+    selector: 'app-incarichi-view',
+    templateUrl: './incarichi-view.component.html',
+    styleUrls: ['./incarichi-view.component.scss'],
+    standalone: false
 })
 export class IncarichiViewComponent implements OnInit {
   idsam: number | null = null;
