@@ -9,6 +9,7 @@ import { NgIf } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { IncarichiFilterComponent } from '../incarichi-filter/incarichi-filter.component';
 import { IncarichiListComponent } from '../incarichi-list/incarichi-list.component';
+import { DxButtonModule } from 'devextreme-angular';
 
 @Component({
   selector: 'app-incarichi-view',
@@ -21,6 +22,7 @@ import { IncarichiListComponent } from '../incarichi-list/incarichi-list.compone
     MatProgressSpinner,
     IncarichiFilterComponent,
     IncarichiListComponent,
+    DxButtonModule,
   ],
 })
 export class IncarichiViewComponent implements OnInit {
