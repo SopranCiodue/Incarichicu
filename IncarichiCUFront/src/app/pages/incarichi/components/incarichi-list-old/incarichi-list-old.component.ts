@@ -5,12 +5,11 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { IncarichiService } from 'src/app/services/incarichi.service';
+import { IncarichiService } from 'src/app/pages/incarichi/services/incarichi.service';
 import { forkJoin, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { MatSort, MatSortHeader } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { IIncarichi } from 'src/app/models/IIncarichi';
 import {
   MatCell,
   MatCellDef,
@@ -24,17 +23,18 @@ import {
   MatTable,
   MatTableDataSource,
 } from '@angular/material/table';
-import { IAllegatiList } from 'src/app/models/IAllegatiList';
+import { IAllegatiList } from 'src/app/models/allegati-list.interface';
 import { formatDate, NgIf } from '@angular/common';
 import { MatButton } from '@angular/material/button';
 import { MatProgressBar } from '@angular/material/progress-bar';
 import { MatIcon } from '@angular/material/icon';
-import { IncarichiAllegatiComponent } from '../incarichi-allegati/incarichi-allegati.component';
+import { IncarichiAllegatiOldComponent } from '../incarichi-allegati-old/incarichi-allegati-old.component';
+import { IIncarichi } from '../../../../models/incarichi.interface';
 
 @Component({
-  selector: 'app-incarichi-list',
-  templateUrl: './incarichi-list.component.html',
-  styleUrls: ['./incarichi-list.component.scss'],
+  selector: 'app-incarichi-list-old',
+  templateUrl: './incarichi-list-old.component.html',
+  styleUrls: ['./incarichi-list-old.component.scss'],
   imports: [
     NgIf,
     MatButton,
@@ -52,11 +52,11 @@ import { IncarichiAllegatiComponent } from '../incarichi-allegati/incarichi-alle
     MatHeaderRow,
     MatRowDef,
     MatRow,
-    IncarichiAllegatiComponent,
+    IncarichiAllegatiOldComponent,
     MatPaginator,
   ],
 })
-export class IncarichiListComponent implements OnInit, AfterViewInit {
+export class IncarichiListOldComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = [
     'tipologia',
     'key_ord',
@@ -76,20 +76,20 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   public allegatoSortAsc = true;
   public listAllegati: IAllegatiList[] = [];
   public list: IIncarichi[] = [];
-  public selectedAllegati: IAllegatiList[] = [];
   public dataSource = new MatTableDataSource<IIncarichi>([]);
-  public backupSelected?: IIncarichi;
   public expandedElement!: IIncarichi | null;
-  isExpansionDetailRow = (index: number, row: any) =>
-    row.hasOwnProperty('detailRow');
+  public allegatoColumnLoaded = false;
   public incarichiSubcription: Subscription = new Subscription(); // Inizializza la Subscription
   public isLoading: Boolean = true;
   public showIdSamError: boolean = false;
   public idsamPresent: boolean = true;
   private totaleIncarichi: number = 0;
-  public allegatoColumnLoaded = false;
   isRowClicked: boolean = false;
   public isLoadingDetails = false;
+  // public selectedAllegati: IAllegatiList[] = [];
+  // public backupSelected?: IIncarichi;
+  // isExpansionDetailRow = (index: number, row: any) =>
+  //   row.hasOwnProperty('detailRow');
 
   @ViewChild(MatPaginator) paginator: MatPaginator | null = null;
   @ViewChild(MatSort) sort: MatSort | null = null;
@@ -104,17 +104,17 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.gestioneExistsIdSam();
+    // this.gestioneExistsIdSam();
     this.getAllList();
     this.aggiornamentoFiltro();
   }
 
-  ngAfterContentChecked(): void {
-    // Aggiorna il flag solo se la riga è espansa
-    if (this.expandedElement !== null && !this.isRowClicked) {
-      this.isRowClicked = true;
-    }
-  }
+  // ngAfterContentChecked(): void {
+  //   // Aggiorna il flag solo se la riga è espansa
+  //   if (this.expandedElement !== null && !this.isRowClicked) {
+  //     this.isRowClicked = true;
+  //   }
+  // }
 
   setupFilterAndSubscription(
     incarichiService: IncarichiService,
@@ -139,66 +139,64 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     };
 
     // Si sottoscrive all'observable per ricevere le modifiche nel testo di ricerca
-    return incarichiService
-      .getSearchObservable()
-      .subscribe((searchText: string) => {
-        // Trasforma il testo di ricerca in minuscolo e applica il filtro alla fonte dei dati
-        dataSource.filter = searchText.trim().toLowerCase();
-      });
+    // return incarichiService
+    //   .getSearchObservable()
+    //   .subscribe((searchText: string) => {
+    //     // Trasforma il testo di ricerca in minuscolo e applica il filtro alla fonte dei dati
+    //     dataSource.filter = searchText.trim().toLowerCase();
+    //   });
   }
 
   getAllList() {
-    const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
-    if (!idsam) {
-      // Gestisci il caso in cui idsam non sia disponibile
-      this.idsamPresent = false;
-      console.error('idsam non disponibile');
-      return;
-    }
+    // const idsam = this.incarichiService.getIdsam(); // Ottieni l'idsam dall'URL
+    // if (!idsam) {
+    //   // Gestisci il caso in cui idsam non sia disponibile
+    //   this.idsamPresent = false;
+    //   console.error('idsam non disponibile');
+    //   return;
+    // }
     this.isLoading = true;
 
-    this.incarichiService
-      .getIncarichi(idsam)
-      .subscribe((incarichi: IIncarichi[]) => {
-        this.list = [];
-        this.totaleIncarichi = incarichi.length;
-        this.gestioneViewIncarichi();
+    this.incarichiService.getIncarichi().subscribe((incarichi) => {
+      this.list = [];
+      this.totaleIncarichi = incarichi.length;
+      this.gestioneViewIncarichi();
 
-        const allegatiRequests = incarichi.map((incarico) =>
-          this.incarichiService
-            .getAllegati(
-              incarico.key_ord,
-              incarico.haccp,
-              incarico.prendiAllegato,
-              incarico.tipologia,
-            )
-            .pipe(map((allegati) => ({ incarico, allegati }))),
-        );
+      const allegatiRequests = incarichi.map((incarico) =>
+        this.incarichiService
+          .getAllegatiList(
+            incarico.key_ord,
+            incarico.haccp,
+            incarico.prendiAllegato,
+            incarico.tipologia,
+          )
+          .pipe(map((allegati) => ({ incarico, allegati }))),
+      );
 
-        forkJoin(allegatiRequests).subscribe((results) => {
-          results.forEach(({ incarico, allegati }) => {
-            const hasAttachments = allegati && allegati.length > 0;
-            const incaricoWithAllegati = {
-              ...incarico,
-              allegati,
-              dataFattTecnicoFormatted: incarico.dataFattTecnico
-                ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
-                : '',
-              hasAttachments:
-                hasAttachments &&
-                !allegati.some(
-                  (a) => a.tipologia.toLowerCase() === 'partecipante',
-                ),
-            };
-            this.list.push(incaricoWithAllegati);
-            this.listAllegati.push(...allegati);
-          });
-
-          this.dataSource.data = this.list;
-          this.isLoading = false;
-          // this.changeDetectorRefs.detectChanges();
+      forkJoin(allegatiRequests).subscribe((results) => {
+        results.forEach(({ incarico, allegati }) => {
+          const hasAttachments = allegati && allegati.length > 0;
+          const incaricoWithAllegati = {
+            ...incarico,
+            allegati,
+            dataFattTecnicoFormatted: incarico.dataFattTecnico
+              ? formatDate(incarico.dataFattTecnico, 'dd/MM/yyyy', 'en-US')
+              : '',
+            hasAttachments:
+              hasAttachments &&
+              !allegati.some(
+                (a) => a.tipologia.toLowerCase() === 'partecipante',
+              ),
+          };
+          this.list.push(incaricoWithAllegati);
+          this.listAllegati.push(...allegati);
         });
+
+        this.dataSource.data = this.list;
+        this.isLoading = false;
+        // this.changeDetectorRefs.detectChanges();
       });
+    });
   }
 
   toggleExpandedElement(row: IIncarichi) {
@@ -220,7 +218,12 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     );
     this.incarichiSubcription.add(
       this.incarichiService
-        .getAllegati(row.key_ord, row.haccp, row.prendiAllegato, row.tipologia)
+        .getAllegatiList(
+          row.key_ord,
+          row.haccp,
+          row.prendiAllegato,
+          row.tipologia,
+        )
         .subscribe((resp) => {
           // Aggiorna i dati con quelli appena caricati
           this.listAllegati = resp;
@@ -264,22 +267,22 @@ export class IncarichiListComponent implements OnInit, AfterViewInit {
     this.incarichiSubcription.unsubscribe(); // Annulla tutte le sottoscrizioni quando il componente viene distrutto
   }
 
-  gestioneExistsIdSam() {
-    let idsam: number | null;
-    try {
-      idsam = this.incarichiService.getIdsam();
-    } catch (error) {
-      this.showIdSamError = true;
-      this.isLoading = false;
-      return;
-    }
-
-    if (!idsam || idsam < 0) {
-      this.showIdSamError = true;
-      this.isLoading = false;
-      return;
-    }
-  }
+  // gestioneExistsIdSam() {
+  //   let idsam: number | null;
+  //   try {
+  //     idsam = this.incarichiService.getIdsam();
+  //   } catch (error) {
+  //     this.showIdSamError = true;
+  //     this.isLoading = false;
+  //     return;
+  //   }
+  //
+  //   if (!idsam || idsam < 0) {
+  //     this.showIdSamError = true;
+  //     this.isLoading = false;
+  //     return;
+  //   }
+  // }
 
   aggiornamentoFiltro() {
     console.log('filtroAllegati:', this.listAllegati);

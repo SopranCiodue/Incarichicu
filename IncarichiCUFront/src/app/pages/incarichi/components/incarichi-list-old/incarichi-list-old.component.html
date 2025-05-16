@@ -1,5 +1,5 @@
 <div *ngIf="showIdSamError" class="error">
-  Storico non presente per l'anagrafica selezionata!
+  {{ "Storico non presente per l'anagrafica selezionata!" }}
 </div>
 <div class="container" *ngIf="!showIdSamError">
   <div class="box">
@@ -136,10 +136,10 @@
             mat-cell
             *matCellDef="let element"
             [attr.colspan]="displayedColumns.length">
-            <app-incarichi-allegati
+            <app-incarichi-allegati-old
               [allegati]="listAllegati"
               [expandedElement]="expandedElement == element">
-            </app-incarichi-allegati>
+            </app-incarichi-allegati-old>
           </td>
         </ng-container>
       </table>

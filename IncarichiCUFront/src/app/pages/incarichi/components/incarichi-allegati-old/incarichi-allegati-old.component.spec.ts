@@ -1,18 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IncarichiAllegatiComponent } from './incarichi-allegati.component';
+import { IncarichiAllegatiOldComponent } from './incarichi-allegati-old.component';
 
 describe('IncarichiAllegatiComponent', () => {
-  let component: IncarichiAllegatiComponent;
-  let fixture: ComponentFixture<IncarichiAllegatiComponent>;
+  let component: IncarichiAllegatiOldComponent;
+  let fixture: ComponentFixture<IncarichiAllegatiOldComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-    imports: [IncarichiAllegatiComponent]
-})
-    .compileComponents();
+      imports: [IncarichiAllegatiOldComponent],
+    }).compileComponents();
 
-    fixture = TestBed.createComponent(IncarichiAllegatiComponent);
+    fixture = TestBed.createComponent(IncarichiAllegatiOldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
