@@ -12,3 +12,8 @@
   ):not(.dx-command-edit):not(.dx-datagrid-group-space) {
   background-color: vars.$bg-row-tabel-header-hover;
 }
+
+// align serach input with the left side border of the table
+.dx-datagrid-search-panel {
+  margin: 0;
+}
