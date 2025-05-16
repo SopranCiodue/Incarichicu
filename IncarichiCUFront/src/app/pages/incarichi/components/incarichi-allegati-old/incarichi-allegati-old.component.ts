@@ -8,8 +8,8 @@ import {
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import FileSaver from 'file-saver';
 import { Subscription } from 'rxjs';
-import { IAllegatiList } from 'src/app/models/IAllegatiList';
-import { IncarichiService } from 'src/app/services/incarichi.service';
+import { IAllegatiList } from 'src/app/models/allegati-list.interface';
+import { IncarichiService } from 'src/app/pages/incarichi/services/incarichi.service';
 import { DatePipe, NgIf } from '@angular/common';
 import {
   MatCell,
@@ -26,9 +26,9 @@ import {
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-incarichi-allegati',
-  templateUrl: './incarichi-allegati.component.html',
-  styleUrls: ['./incarichi-allegati.component.scss'],
+  selector: 'app-incarichi-allegati-old',
+  templateUrl: './incarichi-allegati-old.component.html',
+  styleUrls: ['./incarichi-allegati-old.component.scss'],
   animations: [
     trigger('detailExpand', [
       state(
@@ -63,7 +63,7 @@ import { MatIcon } from '@angular/material/icon';
     DatePipe,
   ],
 })
-export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
+export class IncarichiAllegatiOldComponent implements OnInit, OnDestroy {
   @Input() allegati: IAllegatiList[] = [];
   @Input() expandedElement: any;
   isDownloading = false;
@@ -91,9 +91,10 @@ export class IncarichiAllegatiComponent implements OnInit, OnDestroy {
 
     const { key_ord, haccp } = this.incarichiService.getSelectedIncarichiData();
     const sub = this.incarichiService
-      .getAllegatiData(rientro, key_ord, haccp, allegato.contatore)
+      .downloadAllegato(rientro, key_ord, haccp, allegato.contatore)
       .subscribe(
         (response) => {
+          debugger;
           const blob = new Blob([response], {
             type: 'application/x-rar-compressed',
           });

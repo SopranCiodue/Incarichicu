@@ -1,19 +1,5 @@
-<mat-sidenav-container>
-  <mat-sidenav-content>
-    <div class="distacco">
-      <h1 style="padding-left: 15px">{{ 'Storico Incarichi' }}</h1>
-      <mat-progress-spinner
-        class="spinner"
-        *ngIf="isLoading"
-        mode="indeterminate" />
-      <app-incarichi-filter *ngIf="!isLoading" />
-      <dx-button
-        id="refresh-button"
-        icon="refresh"
-        text="Aggiorna"
-        type="default"
-        hint="Aggiorna calendario" />
-      <app-incarichi-list *ngIf="!isLoading" />
-    </div>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<div class="distacco">
+  <h1 style="padding-left: 15px">{{ 'Storico Incarichi' }}</h1>
+  <app-incarichi-list />
+  <app-incarichi-list-old />
+</div>

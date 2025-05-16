@@ -4,8 +4,8 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./pages/incarichi/incarichi-view/incarichi-view.routes').then(
-        (m) => m.IncarichiViewRoutes,
+      import('./pages/incarichi/incarichi.routes').then(
+        (m) => m.IncarichiRoutes,
       ),
   },
 ];

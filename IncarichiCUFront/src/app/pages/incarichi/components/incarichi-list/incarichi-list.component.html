@@ -1,0 +1,32 @@
+<dx-data-grid
+  [dataSource]="incarichiList()"
+  [columns]="incarichiColumns"
+  (onSelectionChanged)="onSelectionChanged($event)"
+  [selection]="{ mode: 'single' }"
+  [searchPanel]="{ visible: true, width: 300, placeholder: 'Cerca...' }"
+  [headerFilter]="{ visible: true }"
+  [showBorders]="true">
+  <!-- Toolbar -->
+  <dxo-toolbar>
+    <dxi-item location="before" name="searchPanel" />
+    <dxi-item
+      [options]="refreshBtnOpts()"
+      widget="dxButton"
+      locateInMenu="auto"
+      showText="inMenu"
+      location="after" />
+  </dxo-toolbar>
+  <!-- Expand template -->
+  <dxo-master-detail [enabled]="false" template="detail" />
+  <div *dxTemplate="let employee of 'detail'">
+    <h2>{{ 'Test' }}</h2>
+  </div>
+  <!-- Paginator -->
+  <dxo-paging [pageSize]="5" />
+  <dxo-pager
+    [visible]="true"
+    [showPageSizeSelector]="true"
+    [allowedPageSizes]="[5, 10, 25, 50]"
+    [showInfo]="true"
+    [showNavigationButtons]="true" />
+</dx-data-grid>

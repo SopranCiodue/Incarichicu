@@ -1,0 +1,19 @@
+@use 'variables.base' as vars;
+
+.dx-datagrid .dx-header-row {
+  background-color: vars.$bg-row-tabel-header;
+}
+
+.dx-datagrid-headers
+  .dx-datagrid-table
+  .dx-row
+  > td:hover:not(.dx-command-select):not(.dx-command-expand):not(
+    .dx-editor-cell
+  ):not(.dx-command-edit):not(.dx-datagrid-group-space) {
+  background-color: vars.$bg-row-tabel-header-hover;
+}
+
+// align serach input with the left side border of the table
+.dx-datagrid-search-panel {
+  margin: 0;
+}
